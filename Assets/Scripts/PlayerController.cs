@@ -14,8 +14,11 @@ public class PlayerController : Singleton<PlayerController>
 
     private Collider2D[] _colliders = new Collider2D[8];
 
-    void Update()
+    public bool IsActive;
+
+    private void Update()
     {
+        if (!IsActive) return;
         HandleMovement();
     }
 
@@ -58,5 +61,4 @@ public class PlayerController : Singleton<PlayerController>
 
         if (creature.Strength < _strength) creature.Die();
     }
-
 }

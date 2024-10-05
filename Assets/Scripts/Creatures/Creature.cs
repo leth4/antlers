@@ -11,12 +11,22 @@ public class Creature : MonoBehaviour
 
     private Collider2D[] _colliders = new Collider2D[8];
 
-    protected bool CanHearPlayer(float radius)
+    protected Transform GetNearbyPredator(float radius)
     {
-        if (Vector3.Distance(transform.position, PlayerController.Position) > radius) return false;
-        if (GridManager.Instance.GetTileTypeAt(PlayerController.Position) is TileType.TallGrass) return false;
+        if (Vector3.Distance(transform.position, PlayerController.Position) < radius)
+        {
+            if (GridManager.Instance.GetTileTypeAt(PlayerController.Position) is not TileType.TallGrass) return PlayerController.Instance.transform;
+        }
 
-        return true;
+        var count = Physics2D.OverlapCircleNonAlloc(transform.position, radius, _colliders);
+        for (int i = 0; i < count; i++)
+        {
+            var creature = _colliders[i]?.GetComponent<Creature>();
+            if (creature == null || creature == this) continue;
+            if (creature is HunterCreature && GridManager.Instance.GetTileTypeAt(creature.transform.position) is not TileType.TallGrass) return creature.transform;
+        }
+
+        return null;
     }
 
     protected Tile GetRandomTarget(float time)
@@ -31,15 +41,14 @@ public class Creature : MonoBehaviour
         return null;
     }
 
-    protected Creature FindCreature(Vector2 position, float radius, float maxStrength = 99)
+    protected Creature FindCreature(float radius, float maxStrength = 99)
     {
-        if (Physics2D.OverlapCircleNonAlloc(position, radius, _colliders) != 0)
+        var count = Physics2D.OverlapCircleNonAlloc(transform.position, radius, _colliders);
+
+        for (int i = 0; i < count; i++)
         {
-            foreach (var collider in _colliders)
-            {
-                var creature = collider?.GetComponent<Creature>();
-                if (creature != null && creature.Strength < maxStrength) return creature;
-            }
+            var creature = _colliders[i]?.GetComponent<Creature>();
+            if (creature != null && creature != this && creature.Strength < maxStrength) return creature;
         }
 
         return null;
@@ -48,5 +57,15 @@ public class Creature : MonoBehaviour
     public void Die()
     {
         Destroy(gameObject);
+    }
+
+    protected float GetStereoPan()
+    {
+        var pan = (transform.position.x - PlayerController.Position.x) / 5;
+
+        if (pan < -1) pan = -.3f;
+        if (pan > 1) pan = .3f;
+
+        return pan;
     }
 }

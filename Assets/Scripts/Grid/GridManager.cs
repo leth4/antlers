@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Foundation;
+using Unity.Collections;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -67,20 +68,46 @@ public class GridManager : Singleton<GridManager>
         return _grid[nearestTile.x, nearestTile.y];
     }
 
-    protected override void Awake()
+    public void GenerateGrid()
     {
-        base.Awake();
-        GenerateGrid();
-    }
+        transform.DestroyChildren();
 
-    private void GenerateGrid()
-    {
         _grid = new Tile[_gridSize.x, _gridSize.y];
 
         GenerateBase();
-        GenerateTallGrass();
         GenerateSwamp();
+        GenerateTallGrass();
         GenerateGrass();
+
+        ClearUp();
+    }
+
+    private void ClearUp()
+    {
+        for (int i = 0; i < Random.Range(3, 6); i++)
+        {
+            var coord = GetRandomCoord();
+            ApplyToNeighborsRecursive(coord.x, coord.y, .8f, .1f, tile => tile.SetType(TileType.Normal));
+        }
+        for (int i = 0; i < Random.Range(3, 6); i++)
+        {
+            var coord = GetRandomCoord();
+            DrunkardWalkRecursive(coord.x, coord.y, 1, .005f, tile => tile.SetType(TileType.Normal));
+        }
+    }
+
+    private void GenerateBase()
+    {
+        for (int i = 0; i < _gridSize.x; i++)
+        {
+            for (int j = 0; j < _gridSize.y; j++)
+            {
+                var tile = Instantiate(_tilePrefab, new Vector3(i, j, 1), Quaternion.identity);
+                tile.transform.SetParent(transform);
+                tile.SetType(TileType.Normal);
+                _grid[i, j] = tile;
+            }
+        }
     }
 
     private void GenerateSwamp()
@@ -97,6 +124,7 @@ public class GridManager : Singleton<GridManager>
         for (int i = 0; i < Random.Range(_minGrassChunks, _maxGrassChunks); i++)
         {
             var coord = GetRandomCoord();
+
             ApplyToNeighborsRecursive(coord.x, coord.y, _initialGrassChance, _nextGrassChanceDelta, tile => tile.SetType(TileType.Grass));
         }
     }
@@ -107,19 +135,6 @@ public class GridManager : Singleton<GridManager>
         {
             var coord = GetRandomCoord();
             ApplyToNeighborsRecursive(coord.x, coord.y, _initialTallGrassChance, _nextTallGrassChanceDelta, tile => tile.SetType(TileType.TallGrass));
-        }
-    }
-
-    private void GenerateBase()
-    {
-        for (int i = 0; i < _gridSize.x; i++)
-        {
-            for (int j = 0; j < _gridSize.y; j++)
-            {
-                var tile = Instantiate(_tilePrefab, new Vector3(i, j, 1), Quaternion.identity);
-                tile.SetType(TileType.Normal);
-                _grid[i, j] = tile;
-            }
         }
     }
 
@@ -138,6 +153,29 @@ public class GridManager : Singleton<GridManager>
         {
             if (Random.Range(0, 1f) > chance) continue;
             ApplyToNeighborsRecursive(coords.x, coords.y, chance, chanceDelta, applyAction);
+        }
+    }
+
+    private void DrunkardWalkRecursive(int x, int y, float chance, float chanceDelta, Action<Tile> applyAction)
+    {
+        chance -= chanceDelta;
+
+        if (Random.Range(0, 1f) > chance) return;
+        if (_grid[x, y] == null) return;
+
+        applyAction?.Invoke(_grid[x, y]);
+
+        var nextCoords = new Vector2Int[] { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right }.GetRandomItem();
+
+        nextCoords = new Vector2Int(nextCoords.x + x, nextCoords.y + y);
+
+        if (GridHelper.IsValidCoordinates(_grid, nextCoords))
+        {
+            DrunkardWalkRecursive(nextCoords.x, nextCoords.y, chance, chanceDelta, applyAction);
+        }
+        else
+        {
+            DrunkardWalkRecursive(x, y, chance, chanceDelta, applyAction);
         }
     }
 

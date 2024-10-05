@@ -3,57 +3,128 @@ using System.Collections;
 using System.Collections.Generic;
 using Foundation;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class HunterCreature : Creature
 {
     [SerializeField] private float _searchDistance;
     [SerializeField] private float _followDistance;
 
-    [SerializeField] private float _followSpeed;
-    [SerializeField] private float _wanderSpeed;
+    [SerializeField] private float _alertTime;
 
-    private Creature _target;
+    [SerializeField] private float _runningSpeed;
 
-    private Vector3 _wanderDirection;
+    private Tile _tileTarget;
+    private Creature _creatureTarget;
+    private float _currentTimer;
+
+    private State _state;
 
     private void Start()
     {
-        _wanderDirection = UnityEngine.Random.insideUnitCircle.normalized;
+        SetState(State.Searching);
     }
 
     private void Update()
     {
-        if (_target == null)
+        if (_state != State.Alert && _state != State.Running)
         {
-            SearchForTarget();
+            var creature = FindCreature(_searchDistance, 99);
+            if (creature != null)
+            {
+                SetState(State.Alert);
+                _creatureTarget = creature;
+                return;
+            }
         }
-        else
+
+        if (_state is State.Searching)
         {
-            Hunt();
+            transform.position = Vector3.MoveTowards(transform.position, _tileTarget.transform.position.SetZ(0), Speed * GetSpeedModifier() * Time.deltaTime);
+            if (IsAtTarget()) SetState(State.Idle);
         }
+        if (_state is State.Idle)
+        {
+            if (_currentTimer <= 0) SetState(State.Searching);
+        }
+        if (_state is State.Alert)
+        {
+            if (_currentTimer <= 0) SetState(State.Running);
+        }
+        if (_state is State.Running)
+        {
+            if (_creatureTarget == null || Vector3.Distance(transform.position, _creatureTarget.transform.position) > _followDistance)
+            {
+                SetState(State.Searching);
+                return;
+            }
+
+            transform.position += (_creatureTarget.transform.position - transform.position).normalized * _runningSpeed * GetSpeedModifier() * Time.deltaTime;
+        }
+
+        _currentTimer -= Time.deltaTime;
     }
 
-    private void Hunt()
+    private void SetState(State state)
     {
-        if (Vector3.Distance(transform.position, _target.transform.position) > _followDistance)
+        _state = state;
+
+        if (_state is State.Searching)
         {
-            _wanderDirection = (_target.transform.position - transform.position).normalized;
-            _target = null;
-            return;
+            if (_tileTarget != null) _tileTarget.IsTaken = false;
+
+            _tileTarget = GetRandomTarget(Random.Range(2, 4));
+
+            _tileTarget.IsTaken = true;
+        }
+        if (_state is State.Idle)
+        {
+            _currentTimer = Random.Range(.5f, 1f);
+
+            AudioManager.Instance.Play(SoundEnum.HunterSearch, 0, false, GetStereoPan());
+
+            if (_tileTarget != null) _tileTarget.IsTaken = true;
+        }
+        if (_state is State.Alert)
+        {
+            AudioManager.Instance.Play(SoundEnum.HunterFind, 0, false, GetStereoPan());
+            _currentTimer = _alertTime;
+        }
+        if (_state is State.Running)
+        {
+            if (_tileTarget != null) _tileTarget.IsTaken = false;
         }
 
-        transform.position += (_target.transform.position - transform.position).normalized * _followSpeed * Time.deltaTime;
     }
-    
 
-    private void SearchForTarget()
+    private bool IsAtTarget()
     {
-        transform.position += _wanderDirection * _wanderSpeed * Time.deltaTime;
+        if (_tileTarget == null) return false;
+        return Vector3.SqrMagnitude(_tileTarget.transform.position.SetZ(0) - transform.position) < .0001f;
+    }
 
-        var runaway = FindCreature(transform.position, _searchDistance, Strength - 1);
-        if (runaway != null)
-        {
-            _target = runaway;
-        }
+    private float GetSpeedModifier()
+    {
+        var tile = GridManager.Instance.GetTileTypeAt(transform.position);
+        if (tile is TileType.TallGrass) return .8f;
+        if (tile is TileType.Swamp) return .6f;
+        return 1;
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        var creature = other.GetComponent<Creature>();
+        if (creature == null) return;
+
+        if (creature.Strength < Strength) creature.Die();
+        else if (creature.Strength > Strength) Die();
+    }
+
+    private enum State
+    {
+        Searching,
+        Idle,
+        Alert,
+        Running
     }
 }

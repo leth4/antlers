@@ -3,23 +3,29 @@ using System.Collections.Generic;
 using Foundation;
 using UnityEngine;
 
-public class FaunaManager : MonoBehaviour
+public class FaunaManager : Singleton<FaunaManager>
 {
-    [SerializeField] private float _despawnDistance;
+    [SerializeField] private Creature _hunterPrefab;
+    [SerializeField] private Creature _deerPrefab;
 
-    [SerializeField] private List<Creature> _creaturePrefabs;
+    private List<Creature> _creatures = new();
 
-    private void Start()
+    public void GenerateCreatures()
     {
-        StartCoroutine(SpawnRoutine());
+        _creatures.ForEach(creature => { if (creature != null) Destroy(creature.gameObject); });
+
+        for (int i = 0; i < Random.Range(2, 5); i++)
+        {
+            _creatures.Add(Instantiate(_deerPrefab, GetRandomPositionInBounds(), Quaternion.identity));
+        }
+        for (int i = 0; i < Random.Range(0, 2); i++)
+        {
+            _creatures.Add(Instantiate(_hunterPrefab, GetRandomPositionInBounds(), Quaternion.identity));
+        }
     }
 
-    private IEnumerator SpawnRoutine()
+    private Vector3 GetRandomPositionInBounds()
     {
-        while (true)
-        {
-            // Instantiate(_creaturePrefabs.GetRandomItem(), new Vector3(Random.Range(-5, 5), Random.Range(-5, 5), 0), Quaternion.identity);
-            yield return new WaitForSeconds(.2f);
-        }
+        return new Vector3(Random.Range(0, 40), Random.Range(0, 20), 0);
     }
 }

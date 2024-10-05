@@ -45,7 +45,7 @@ public static class GridHelper
 
         return results;
     }
-
+    
     public static Vector2Int? GetCoordinates<T>(T[,] matrix, T item)
     {
         for (int x = 0; x < matrix.GetLength(0); x++)

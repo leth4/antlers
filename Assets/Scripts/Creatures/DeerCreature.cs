@@ -7,14 +7,16 @@ using Random = UnityEngine.Random;
 
 public class DeerCreature : Creature
 {
-    private State _state;
-
     [SerializeField] private float _alertRadius;
     [SerializeField] private float _alertTime;
     [SerializeField] private float _runningSpeed;
 
+    private State _state;
+
     private float _currentTimer;
     private Tile _currentTarget;
+
+    private Transform _currentPredatorTransform;
 
     private void Start()
     {
@@ -25,8 +27,10 @@ public class DeerCreature : Creature
     {
         if (_state != State.Alert && _state != State.Running)
         {
-            if (CanHearPlayer(_alertRadius))
+            var predator = GetNearbyPredator(_alertRadius);
+            if (predator != null)
             {
+                _currentPredatorTransform = predator;
                 SetState(State.Alert);
                 return;
             }
@@ -58,13 +62,14 @@ public class DeerCreature : Creature
 
     private void HandleRunning()
     {
-        transform.position += (transform.position - PlayerController.Position.ToVector3()).normalized * _runningSpeed * GetSpeedModifier() * Time.deltaTime;
-        transform.position = transform.position.SetZ(0);
+        transform.position += (transform.position - _currentPredatorTransform.position).normalized * _runningSpeed * GetSpeedModifier() * Time.deltaTime;
+
+        if (!GridManager.Instance.IsInBounds(transform.position)) Die();
     }
 
     private void HandleAlert()
     {
-        if (!CanHearPlayer(_alertRadius)) SetState(State.Searching);
+        if (!GetNearbyPredator(_alertRadius)) SetState(State.Searching);
         if (_currentTimer <= 0) SetState(State.Running);
     }
 
@@ -79,7 +84,7 @@ public class DeerCreature : Creature
 
     private void HandleSearch()
     {
-        transform.position = Vector3.MoveTowards(transform.position, _currentTarget.transform.position, Speed * GetSpeedModifier() * Time.deltaTime);
+        transform.position = Vector3.MoveTowards(transform.position, _currentTarget.transform.position.SetZ(0), Speed * GetSpeedModifier() * Time.deltaTime);
 
         if (IsAtTarget())
         {
@@ -118,7 +123,7 @@ public class DeerCreature : Creature
         }
         else if (_state is State.Eating)
         {
-            _currentTimer = 5;
+            _currentTimer = 3;
 
             if (_currentTarget != null) _currentTarget.IsTaken = true;
         }
@@ -135,7 +140,7 @@ public class DeerCreature : Creature
     private bool IsAtTarget()
     {
         if (_currentTarget == null) return false;
-        return Vector3.SqrMagnitude(_currentTarget.transform.position - transform.position) < .0001f;
+        return Vector3.SqrMagnitude(_currentTarget.transform.position.SetZ(0) - transform.position) < .0001f;
     }
 
     private float GetSpeedModifier()

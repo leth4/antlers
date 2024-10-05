@@ -9,5 +9,8 @@ public enum ChannelEnum
 public enum SoundEnum
 {
 	None = -1,
-	Wind = 0,
+	HunterSearch = 0,
+	HunterFind = 1,
+	PreyScream = 2,
+	Wind = 3,
 }
