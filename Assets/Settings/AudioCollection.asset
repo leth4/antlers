@@ -22,16 +22,16 @@ MonoBehaviour:
     - Name: HunterSearch
       Clips:
       - AudioClip: {fileID: 8300000, guid: a1bfa09451f4342449ced83e266e1569, type: 3}
-        Volume: 0.71
-      HasPitchVariation: 0
-      PitchVariation: 0
+        Volume: 1
+      HasPitchVariation: 1
+      PitchVariation: 0.225
       Enum: 0
     - Name: HunterFind
       Clips:
       - AudioClip: {fileID: 8300000, guid: c11c3d4acb421844e91c70d74c07d136, type: 3}
-        Volume: 0.73
-      HasPitchVariation: 0
-      PitchVariation: 0
+        Volume: 1
+      HasPitchVariation: 1
+      PitchVariation: 0.169
       Enum: 1
     - Name: PreyScream
       Clips:
@@ -51,6 +51,13 @@ MonoBehaviour:
       HasPitchVariation: 0
       PitchVariation: 0
       Enum: 3
+    - Name: Ambient
+      Clips:
+      - AudioClip: {fileID: 8300000, guid: 588c197ac6e520c4b8812cd79ef3cbcb, type: 3}
+        Volume: 1
+      HasPitchVariation: 0
+      PitchVariation: 0
+      Enum: 4
     Enum: 2
     EditorColor: {r: 0.6367924, g: 0.6367924, b: 1, a: 1}
   EnumsAssigned: 1

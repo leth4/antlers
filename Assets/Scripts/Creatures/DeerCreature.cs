@@ -11,6 +11,11 @@ public class DeerCreature : Creature
     [SerializeField] private float _alertTime;
     [SerializeField] private float _runningSpeed;
 
+    [SerializeField] private SpriteRenderer _renderer;
+    [SerializeField] private Sprite _defaultSprite;
+    [SerializeField] private Sprite _walkSprite;
+    [SerializeField] private Sprite _eatSprite;
+
     private State _state;
 
     private float _currentTimer;
@@ -64,6 +69,9 @@ public class DeerCreature : Creature
     {
         transform.position += (transform.position - _currentPredatorTransform.position).normalized * _runningSpeed * GetSpeedModifier() * Time.deltaTime;
 
+        _renderer.sprite = Time.time % .2f > .1f ? _defaultSprite : _walkSprite;
+        _renderer.flipX = transform.position.x < _currentPredatorTransform.position.x;
+
         if (!GridManager.Instance.IsInBounds(transform.position)) Die();
     }
 
@@ -77,7 +85,7 @@ public class DeerCreature : Creature
     {
         if (_currentTimer <= 0)
         {
-            _currentTarget.SetType(TileType.Normal);
+            _currentTarget.SetType(TileType.Normal, 0);
             SetState(State.Searching);
         }
     }
@@ -85,6 +93,9 @@ public class DeerCreature : Creature
     private void HandleSearch()
     {
         transform.position = Vector3.MoveTowards(transform.position, _currentTarget.transform.position.SetZ(0), Speed * GetSpeedModifier() * Time.deltaTime);
+
+        _renderer.sprite = Time.time % .5f > .25f ? _defaultSprite : _walkSprite;
+        _renderer.flipX = transform.position.x > _currentTarget.transform.position.x;
 
         if (IsAtTarget())
         {
@@ -107,6 +118,8 @@ public class DeerCreature : Creature
 
         if (_state is State.Searching)
         {
+            _renderer.sprite = _defaultSprite;
+
             if (_currentTarget != null) _currentTarget.IsTaken = false;
 
             var grassTile = GridManager.Instance.FindTile(transform.position, TileType.Grass);
@@ -117,18 +130,23 @@ public class DeerCreature : Creature
         }
         if (_state is State.Idle)
         {
+            _renderer.sprite = _defaultSprite;
+
             _currentTimer = Random.Range(1, 2);
 
             if (_currentTarget != null) _currentTarget.IsTaken = true;
         }
         else if (_state is State.Eating)
         {
-            _currentTimer = 3;
+            _currentTimer = Random.Range(2f, 2.5f);
+
+            _renderer.sprite = _eatSprite;
 
             if (_currentTarget != null) _currentTarget.IsTaken = true;
         }
         else if (_state is State.Alert)
         {
+            _renderer.sprite = _defaultSprite;
             _currentTimer = _alertTime;
         }
         else if (_state is State.Running)

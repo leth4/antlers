@@ -13,4 +13,5 @@ public enum SoundEnum
 	HunterFind = 1,
 	PreyScream = 2,
 	Wind = 3,
+	Ambient = 4,
 }

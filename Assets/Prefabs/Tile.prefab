@@ -99,3 +99,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsTaken: 0
   _renderer: {fileID: 3837259869473885227}
+  _minColorCold: {r: 0.17254902, g: 0.20784314, b: 0.21568628, a: 1}
+  _maxColorCold: {r: 0.21057314, g: 0.26415092, b: 0.25302303, a: 1}
+  _minColorWarm: {r: 0.21568628, g: 0.17775205, b: 0.17254902, a: 1}
+  _maxColorWarm: {r: 0.26415092, g: 0.2341735, b: 0.21057314, a: 1}
+  _minColorBlack: {r: 0.04705883, g: 0.04705883, b: 0.04705883, a: 1}
+  _maxColorBlack: {r: 0.07058824, g: 0.06666667, b: 0.06666667, a: 1}

@@ -32,6 +32,7 @@ public class GridManager : Singleton<GridManager>
     [SerializeField] private int _maxSwampGrassChunks;
 
     private Tile[,] _grid;
+    private int _group;
 
     public bool IsInBounds(Vector2 position)
     {
@@ -73,6 +74,7 @@ public class GridManager : Singleton<GridManager>
         transform.DestroyChildren();
 
         _grid = new Tile[_gridSize.x, _gridSize.y];
+        _group = 0;
 
         GenerateBase();
         GenerateSwamp();
@@ -86,13 +88,15 @@ public class GridManager : Singleton<GridManager>
     {
         for (int i = 0; i < Random.Range(3, 6); i++)
         {
+            _group++;
             var coord = GetRandomCoord();
-            ApplyToNeighborsRecursive(coord.x, coord.y, .8f, .1f, tile => tile.SetType(TileType.Normal));
+            ApplyToNeighborsRecursive(coord.x, coord.y, .8f, .1f, tile => tile.SetType(TileType.Junk, _group));
         }
         for (int i = 0; i < Random.Range(3, 6); i++)
         {
+            _group++;
             var coord = GetRandomCoord();
-            DrunkardWalkRecursive(coord.x, coord.y, 1, .005f, tile => tile.SetType(TileType.Normal));
+            DrunkardWalkRecursive(coord.x, coord.y, 1, .005f, tile => tile.SetType(TileType.Junk, _group));
         }
     }
 
@@ -104,7 +108,7 @@ public class GridManager : Singleton<GridManager>
             {
                 var tile = Instantiate(_tilePrefab, new Vector3(i, j, 1), Quaternion.identity);
                 tile.transform.SetParent(transform);
-                tile.SetType(TileType.Normal);
+                tile.SetType(TileType.Normal, 0);
                 _grid[i, j] = tile;
             }
         }
@@ -114,8 +118,9 @@ public class GridManager : Singleton<GridManager>
     {
         for (int i = 0; i < Random.Range(_minSwampGrassChunks, _maxSwampGrassChunks); i++)
         {
+            _group++;
             var coord = GetRandomCoord();
-            ApplyToNeighborsRecursive(coord.x, coord.y, _initialSwampChance, _nextSwampChanceDelta, tile => tile.SetType(TileType.Swamp));
+            ApplyToNeighborsRecursive(coord.x, coord.y, _initialSwampChance, _nextSwampChanceDelta, tile => tile.SetType(TileType.Swamp, _group));
         }
     }
 
@@ -123,9 +128,9 @@ public class GridManager : Singleton<GridManager>
     {
         for (int i = 0; i < Random.Range(_minGrassChunks, _maxGrassChunks); i++)
         {
+            _group++;
             var coord = GetRandomCoord();
-
-            ApplyToNeighborsRecursive(coord.x, coord.y, _initialGrassChance, _nextGrassChanceDelta, tile => tile.SetType(TileType.Grass));
+            ApplyToNeighborsRecursive(coord.x, coord.y, _initialGrassChance, _nextGrassChanceDelta, tile => tile.SetType(TileType.Grass, _group));
         }
     }
 
@@ -133,8 +138,9 @@ public class GridManager : Singleton<GridManager>
     {
         for (int i = 0; i < Random.Range(_minTallGrassChunks, _maxTallGrassChunks); i++)
         {
+            _group++;
             var coord = GetRandomCoord();
-            ApplyToNeighborsRecursive(coord.x, coord.y, _initialTallGrassChance, _nextTallGrassChanceDelta, tile => tile.SetType(TileType.TallGrass));
+            ApplyToNeighborsRecursive(coord.x, coord.y, _initialTallGrassChance, _nextTallGrassChanceDelta, tile => tile.SetType(TileType.TallGrass, _group));
         }
     }
 
@@ -186,10 +192,10 @@ public class GridManager : Singleton<GridManager>
         return type switch
         {
             TileType.Normal => _sprites[0],
-            TileType.Grass => _sprites[1],
-            TileType.TallGrass => _sprites[2],
-            TileType.Swamp => _sprites[3],
-            TileType.Water => _sprites[4],
+            TileType.Grass => _sprites[Random.Range(1, 3)],
+            TileType.TallGrass => _sprites[3],
+            TileType.Swamp => _sprites[4],
+            TileType.Junk => _sprites[Random.Range(5, 8)],
             _ => _sprites[0]
         };
     }

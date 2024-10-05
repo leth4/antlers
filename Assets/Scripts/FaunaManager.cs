@@ -14,11 +14,11 @@ public class FaunaManager : Singleton<FaunaManager>
     {
         _creatures.ForEach(creature => { if (creature != null) Destroy(creature.gameObject); });
 
-        for (int i = 0; i < Random.Range(2, 5); i++)
+        for (int i = 0; i < Random.Range(3, 6); i++)
         {
             _creatures.Add(Instantiate(_deerPrefab, GetRandomPositionInBounds(), Quaternion.identity));
         }
-        for (int i = 0; i < Random.Range(0, 2); i++)
+        for (int i = 0; i < Random.Range(1, 2); i++)
         {
             _creatures.Add(Instantiate(_hunterPrefab, GetRandomPositionInBounds(), Quaternion.identity));
         }
@@ -26,6 +26,6 @@ public class FaunaManager : Singleton<FaunaManager>
 
     private Vector3 GetRandomPositionInBounds()
     {
-        return new Vector3(Random.Range(0, 40), Random.Range(0, 20), 0);
+        return new Vector3(Random.Range(0, 35), Random.Range(0, 15), 0);
     }
 }

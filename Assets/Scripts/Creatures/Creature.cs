@@ -29,6 +29,15 @@ public class Creature : MonoBehaviour
         return null;
     }
 
+    protected bool CanHearPlayer(float radius)
+    {
+        if (Vector3.Distance(transform.position, PlayerController.Position) < radius)
+        {
+            if (GridManager.Instance.GetTileTypeAt(PlayerController.Position) is not TileType.TallGrass) return true;
+        }
+        return false;
+    }
+
     protected Tile GetRandomTarget(float time)
     {
         for (int i = 0; i < 50; i++)

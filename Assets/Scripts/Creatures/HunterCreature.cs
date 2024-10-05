@@ -18,6 +18,8 @@ public class HunterCreature : Creature
     private Creature _creatureTarget;
     private float _currentTimer;
 
+    private bool _followingPlayer;
+
     private State _state;
 
     private void Start()
@@ -29,6 +31,13 @@ public class HunterCreature : Creature
     {
         if (_state != State.Alert && _state != State.Running)
         {
+            if (CanHearPlayer(_searchDistance))
+            {
+                SetState(State.Alert);
+                _followingPlayer = true;
+                return;
+            }
+
             var creature = FindCreature(_searchDistance, 99);
             if (creature != null)
             {
@@ -53,13 +62,28 @@ public class HunterCreature : Creature
         }
         if (_state is State.Running)
         {
-            if (_creatureTarget == null || Vector3.Distance(transform.position, _creatureTarget.transform.position) > _followDistance)
+            if (_followingPlayer)
             {
-                SetState(State.Searching);
-                return;
+                if (Vector3.Distance(transform.position, PlayerController.Position) > _followDistance)
+                {
+                    _followingPlayer = false;
+                    SetState(State.Searching);
+                    return;
+                }
+
+                transform.position += (PlayerController.Position.ToVector3() - transform.position).normalized * _runningSpeed * GetSpeedModifier() * Time.deltaTime;
+            }
+            else
+            {
+                if (_creatureTarget == null || Vector3.Distance(transform.position, _creatureTarget.transform.position) > _followDistance)
+                {
+                    SetState(State.Searching);
+                    return;
+                }
+
+                transform.position += (_creatureTarget.transform.position - transform.position).normalized * _runningSpeed * GetSpeedModifier() * Time.deltaTime;
             }
 
-            transform.position += (_creatureTarget.transform.position - transform.position).normalized * _runningSpeed * GetSpeedModifier() * Time.deltaTime;
         }
 
         _currentTimer -= Time.deltaTime;
@@ -76,6 +100,8 @@ public class HunterCreature : Creature
             _tileTarget = GetRandomTarget(Random.Range(2, 4));
 
             _tileTarget.IsTaken = true;
+
+            _followingPlayer = false;
         }
         if (_state is State.Idle)
         {
