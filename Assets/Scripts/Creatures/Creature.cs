@@ -11,15 +11,24 @@ public class Creature : MonoBehaviour
 
     private Collider2D[] _colliders = new Collider2D[8];
 
-    protected Vector2 GetRandomDirection(float time)
+    protected bool CanHearPlayer(float radius)
     {
-        for (int i = 0; i < 20; i++)
+        if (Vector3.Distance(transform.position, PlayerController.Position) > radius) return false;
+        if (GridManager.Instance.GetTileTypeAt(PlayerController.Position) is TileType.TallGrass) return false;
+
+        return true;
+    }
+
+    protected Tile GetRandomTarget(float time)
+    {
+        for (int i = 0; i < 50; i++)
         {
             var direction = Random.insideUnitCircle.normalized;
-            if (GridManager.Instance.IsInBounds(transform.position + direction.ToVector3() * Speed * time * 1.5f)) return direction;
+            var tile = GridManager.Instance.GetTileAt(transform.position + direction.ToVector3() * Speed * time);
+            if (tile != null && !tile.IsTaken) return tile;
         }
-        Debug.Log("Can't find direction");
-        return Vector3.zero;
+        Debug.LogWarning("Can't find a target");
+        return null;
     }
 
     protected Creature FindCreature(Vector2 position, float radius, float maxStrength = 99)

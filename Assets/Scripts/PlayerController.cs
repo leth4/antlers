@@ -25,6 +25,11 @@ public class PlayerController : Singleton<PlayerController>
         var verticalMovement = Input.GetAxisRaw("Vertical");
 
         var movementSpeed = _movementSpeed;
+        var tile = GridManager.Instance.GetTileTypeAt(transform.position);
+        if (tile is TileType.Grass) movementSpeed *= .9f;
+        if (tile is TileType.TallGrass) movementSpeed *= .8f;
+        if (tile is TileType.Swamp) movementSpeed *= .8f;
+
         var movement = new Vector2(horizontalMovement, verticalMovement);
 
         if (!OverlapsAt(transform.position + new Vector2(horizontalMovement, verticalMovement).normalized.ToVector3() * movementSpeed * Time.deltaTime))
@@ -46,9 +51,9 @@ public class PlayerController : Singleton<PlayerController>
         return Physics2D.OverlapCircleNonAlloc(position, transform.localScale.x / 2, _colliders, _obstaclesMask) != 0;
     }
 
-    private void OnCollisionEnter2D(Collision2D other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        var creature = other.transform.GetComponent<Creature>();
+        var creature = other.GetComponent<Creature>();
         if (creature == null) return;
 
         if (creature.Strength < _strength) creature.Die();

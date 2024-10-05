@@ -13,14 +13,22 @@ public class GridManager : Singleton<GridManager>
     [SerializeField] private Tile _tilePrefab;
 
     [Header("Grass")]
+    [SerializeField] private float _initialGrassChance;
     [SerializeField] private float _nextGrassChanceDelta;
     [SerializeField] private int _minGrassChunks;
     [SerializeField] private int _maxGrassChunks;
 
     [Header("Tall Grass")]
+    [SerializeField] private float _initialTallGrassChance;
     [SerializeField] private float _nextTallGrassChanceDelta;
     [SerializeField] private int _minTallGrassChunks;
     [SerializeField] private int _maxTallGrassChunks;
+
+    [Header("Swamp")]
+    [SerializeField] private float _initialSwampChance;
+    [SerializeField] private float _nextSwampChanceDelta;
+    [SerializeField] private int _minSwampGrassChunks;
+    [SerializeField] private int _maxSwampGrassChunks;
 
     private Tile[,] _grid;
 
@@ -30,8 +38,38 @@ public class GridManager : Singleton<GridManager>
         return true;
     }
 
-    private void Start()
+    public Tile FindTile(Vector3 position, TileType tileType)
     {
+        var nearestTile = new Vector2Int(Mathf.RoundToInt(position.x), Mathf.RoundToInt(position.y));
+        if (!GridHelper.IsValidCoordinates(_grid, nearestTile)) return null;
+
+        var adjacent = GridHelper.GetAdjacent(_grid, nearestTile.x, nearestTile.y, true);
+
+        foreach (var tile in adjacent)
+        {
+            if (!tile.IsTaken && tile.Type == tileType) return tile;
+        }
+
+        return null;
+    }
+
+    public TileType GetTileTypeAt(Vector3 position)
+    {
+        var nearestTile = new Vector2Int(Mathf.RoundToInt(position.x), Mathf.RoundToInt(position.y));
+        if (!GridHelper.IsValidCoordinates(_grid, nearestTile)) return TileType.None;
+        return _grid[nearestTile.x, nearestTile.y].Type;
+    }
+
+    public Tile GetTileAt(Vector3 position)
+    {
+        var nearestTile = new Vector2Int(Mathf.RoundToInt(position.x), Mathf.RoundToInt(position.y));
+        if (!GridHelper.IsValidCoordinates(_grid, nearestTile)) return null;
+        return _grid[nearestTile.x, nearestTile.y];
+    }
+
+    protected override void Awake()
+    {
+        base.Awake();
         GenerateGrid();
     }
 
@@ -40,8 +78,18 @@ public class GridManager : Singleton<GridManager>
         _grid = new Tile[_gridSize.x, _gridSize.y];
 
         GenerateBase();
-        GenerateGrass();
         GenerateTallGrass();
+        GenerateSwamp();
+        GenerateGrass();
+    }
+
+    private void GenerateSwamp()
+    {
+        for (int i = 0; i < Random.Range(_minSwampGrassChunks, _maxSwampGrassChunks); i++)
+        {
+            var coord = GetRandomCoord();
+            ApplyToNeighborsRecursive(coord.x, coord.y, _initialSwampChance, _nextSwampChanceDelta, tile => tile.SetType(TileType.Swamp));
+        }
     }
 
     private void GenerateGrass()
@@ -49,7 +97,7 @@ public class GridManager : Singleton<GridManager>
         for (int i = 0; i < Random.Range(_minGrassChunks, _maxGrassChunks); i++)
         {
             var coord = GetRandomCoord();
-            ApplyToNeighborsRecursive(coord.x, coord.y, 1, _nextGrassChanceDelta, tile => tile.SetType(GetSprite(TileType.Grass), TileType.Grass));
+            ApplyToNeighborsRecursive(coord.x, coord.y, _initialGrassChance, _nextGrassChanceDelta, tile => tile.SetType(TileType.Grass));
         }
     }
 
@@ -58,7 +106,7 @@ public class GridManager : Singleton<GridManager>
         for (int i = 0; i < Random.Range(_minTallGrassChunks, _maxTallGrassChunks); i++)
         {
             var coord = GetRandomCoord();
-            ApplyToNeighborsRecursive(coord.x, coord.y, 1, _nextTallGrassChanceDelta, tile => tile.SetType(GetSprite(TileType.TallGrass), TileType.TallGrass));
+            ApplyToNeighborsRecursive(coord.x, coord.y, _initialTallGrassChance, _nextTallGrassChanceDelta, tile => tile.SetType(TileType.TallGrass));
         }
     }
 
@@ -69,7 +117,7 @@ public class GridManager : Singleton<GridManager>
             for (int j = 0; j < _gridSize.y; j++)
             {
                 var tile = Instantiate(_tilePrefab, new Vector3(i, j, 1), Quaternion.identity);
-                tile.SetType(GetSprite(TileType.Normal), TileType.Normal);
+                tile.SetType(TileType.Normal);
                 _grid[i, j] = tile;
             }
         }
@@ -95,7 +143,7 @@ public class GridManager : Singleton<GridManager>
 
     private Vector2Int GetRandomCoord() => new Vector2Int(Random.Range(0, _gridSize.x), Random.Range(0, _gridSize.y));
 
-    private Sprite GetSprite(TileType type)
+    public Sprite GetSprite(TileType type)
     {
         return type switch
         {

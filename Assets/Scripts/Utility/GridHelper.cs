@@ -64,23 +64,4 @@ public static class GridHelper
     {
         return IsValidCoordinates(matrix, coords.x, coords.y);
     }
-
-    public static Vector3 GetIsometricWorldPosition(int x, int y, float tileSize = 1, Vector3 offset = default(Vector3))
-    {
-        var positionX = (x + y) * tileSize / 2f;
-        var positionY = (x - y) * tileSize / 4f;
-        var positionZ = x - y;
-
-        return new Vector3(positionX, positionY, positionZ) + offset;
-    }
-
-    public static Vector2Int GetIsometricCoordinatesByWorldPosition(Vector2 position, float tileSize = 1, Vector2 offset = default(Vector2))
-    {
-        position += offset;
-
-        var X = (int)((position.x + position.y * 2) / tileSize);
-        var Y = (int)((-position.y * 2 + position.x) / tileSize);
-
-        return new Vector2Int(X, Y);
-    }
 }

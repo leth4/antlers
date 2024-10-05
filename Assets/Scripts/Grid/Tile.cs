@@ -6,17 +6,20 @@ public class Tile : MonoBehaviour
 {
     public TileType Type { get; private set; }
 
+    public bool IsTaken;
+
     [SerializeField] private SpriteRenderer _renderer;
 
-    public void SetType(Sprite sprite, TileType type)
+    public void SetType(TileType type)
     {
-        _renderer.sprite = sprite;
+        _renderer.sprite = GridManager.Instance.GetSprite(type);
         Type = type;
     }
 }
 
 public enum TileType
 {
+    None,
     Normal,
     Grass,
     TallGrass,
