@@ -59,7 +59,9 @@ public class PlayerController : Singleton<PlayerController>
         var creature = other.GetComponent<Creature>();
         if (creature == null) return;
 
-        if (creature.Strength > _strength) Debug.Log("Took damage");
+        if (creature.Strength > _strength) GameManager.Instance.RemoveHealth();
+
+        if (creature.Strength < _strength) GameManager.Instance.AddHealth();
 
         creature.Die();
     }
