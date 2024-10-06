@@ -192,7 +192,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: HUMAN IN THE WORLD OF MACHINES
+  m_Text: 
 --- !u!222 &179049072
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -263,6 +263,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _overlay: {fileID: 1568110607}
+  _overlayText: {fileID: 179049071}
   _healthCounter: {fileID: 244452812}
 --- !u!114 &194254349
 MonoBehaviour:
@@ -1692,7 +1693,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 8e637b1b52e41244c84b83f8327f6421, type: 3}
-  m_Color: {r: 0.8962264, g: 0.85999084, b: 0.83281416, a: 1}
+  m_Color: {r: 0.8113208, g: 0.7820556, b: 0.76157, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -1711,7 +1712,7 @@ Transform:
   m_GameObject: {fileID: 1847852639}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 16, y: 6, z: 0}
+  m_LocalPosition: {x: 17.5, y: 15.1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

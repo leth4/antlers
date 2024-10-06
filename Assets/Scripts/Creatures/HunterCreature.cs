@@ -124,7 +124,7 @@ public class HunterCreature : Creature
         {
             _currentTimer = Random.Range(.5f, 1f);
 
-            AudioManager.Instance.Play(SoundEnum.HunterSearch, 0, false, GetStereoPan());
+            PlaySound(SoundEnum.HunterSearch);
 
             if (_tileTarget != null) _tileTarget.IsTaken = true;
 
@@ -132,7 +132,8 @@ public class HunterCreature : Creature
         }
         if (_state is State.Alert)
         {
-            AudioManager.Instance.Play(SoundEnum.HunterFind, 0, false, GetStereoPan());
+            PlaySound(SoundEnum.HunterSearch);
+
             _currentTimer = _alertTime;
 
             _renderer.sprite = _defaultSprite;

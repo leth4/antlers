@@ -23,15 +23,15 @@ MonoBehaviour:
       Clips:
       - AudioClip: {fileID: 8300000, guid: a1bfa09451f4342449ced83e266e1569, type: 3}
         Volume: 1
-      HasPitchVariation: 1
-      PitchVariation: 0.225
+      HasPitchVariation: 0
+      PitchVariation: 0
       Enum: 0
     - Name: HunterFind
       Clips:
       - AudioClip: {fileID: 8300000, guid: c11c3d4acb421844e91c70d74c07d136, type: 3}
         Volume: 1
-      HasPitchVariation: 1
-      PitchVariation: 0.169
+      HasPitchVariation: 0
+      PitchVariation: 0
       Enum: 1
     - Name: PreyScream
       Clips:

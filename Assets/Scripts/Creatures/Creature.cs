@@ -71,18 +71,28 @@ public class Creature : MonoBehaviour
         return null;
     }
 
+    protected void PlaySound(SoundEnum sound)
+    {
+        AudioManager.Instance.Play(sound, 0, false, GetStereoPan(), GetVolume());
+    }
+
     public void Die(float delay = 0)
     {
         Destroy(gameObject, delay);
     }
 
-    protected float GetStereoPan()
+    private float GetStereoPan()
     {
         var pan = (transform.position.x - PlayerController.Position.x) / 5;
 
-        if (pan < -1) pan = -.3f;
-        if (pan > 1) pan = .3f;
+        if (pan < -1) pan = -.5f;
+        if (pan > 1) pan = .5f;
 
         return pan;
+    }
+
+    private float GetVolume()
+    {
+        return 1 - Mathf.Clamp(Vector3.Distance(PlayerController.Position, transform.position) / 15, 0, .8f);
     }
 }

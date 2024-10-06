@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Foundation;
@@ -7,22 +8,67 @@ using UnityEngine.UI;
 public class GameManager : Singleton<GameManager>
 {
     [SerializeField] private GameObject _overlay;
+    [SerializeField] private Text _overlayText;
     [SerializeField] private Text _healthCounter;
 
     private int _healthLeft = 3;
 
     private void Start()
     {
-        _overlay.SetActive(true);
         UpdateHealthCounter();
+        // StartCoroutine(GameIntroRoutine(() =>
+        // {
+        AudioManager.Instance.Play(SoundEnum.Wind, 0, true);
+        GenerateLevel();
+        PlayerController.Instance.IsActive = true;
+        // }));
+    }
 
-        Tween.Delay(this, 0f, () =>
-        {
-            _overlay.SetActive(false);
-            AudioManager.Instance.Play(SoundEnum.Wind, 2, true);
-            GenerateLevel();
-            PlayerController.Instance.IsActive = true;
-        });
+    private IEnumerator GameIntroRoutine(Action onFinished)
+    {
+        _overlay.SetActive(true);
+
+        yield return new WaitForSeconds(.5f);
+
+        _overlayText.text = "A HUMAN IN THE WORLD OF MACHINES";
+        yield return new WaitForSeconds(2);
+        _overlayText.text = "";
+        yield return new WaitForSeconds(1);
+
+        _overlayText.text = "THERE'S 15 DAYS LEFT UNTIL WINTER";
+        yield return new WaitForSeconds(2);
+        _overlayText.text = "";
+        yield return new WaitForSeconds(1);
+
+        _overlayText.text = "MOVE WITH [WASD] or [↑←↓→]";
+        yield return new WaitForSeconds(2);
+        _overlayText.text = "";
+        yield return new WaitForSeconds(1);
+
+        _overlay.SetActive(false);
+
+        onFinished?.Invoke();
+    }
+
+    private IEnumerator GameEndingRoutine(Action onFinished)
+    {
+        _overlay.SetActive(true);
+
+        yield return new WaitForSeconds(.5f);
+
+        _overlayText.text = "YOUR SURVIVED ANOTHER FALL";
+        yield return new WaitForSeconds(2);
+        _overlayText.text = "";
+        yield return new WaitForSeconds(1);
+
+        _overlayText.text = "MACHINES WILL HYBERNATE NOW";
+        yield return new WaitForSeconds(2);
+        _overlayText.text = "";
+        yield return new WaitForSeconds(1);
+
+        _overlay.SetActive(false);
+
+        onFinished?.Invoke();
     }
 
     public void AddHealth()

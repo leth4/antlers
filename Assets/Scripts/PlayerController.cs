@@ -48,7 +48,7 @@ public class PlayerController : Singleton<PlayerController>
 
         if (horizontalMovement != 0 || verticalMovement != 0)
         {
-            _renderer.sprite = Time.time % .4f > .2f ? _defaultSprite : _walkSprite;
+            _renderer.sprite = Time.time % .5f > .25f ? _defaultSprite : _walkSprite;
             _renderer.flipX = horizontalMovement < 0;
         }
         else _renderer.sprite = _defaultSprite;

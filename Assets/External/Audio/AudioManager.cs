@@ -82,14 +82,14 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    public void Play(SoundEnum soundEnum, float fadeTime = 0, bool loops = false, float pan = 0)
+    public void Play(SoundEnum soundEnum, float fadeTime = 0, bool loops = false, float pan = 0, float volume = 1)
     {
-        StartAudioAction(AudioAction.Start, _soundEnumDictionary[soundEnum], fadeTime, loops, pan);
+        StartAudioAction(AudioAction.Start, _soundEnumDictionary[soundEnum], fadeTime, loops, pan, volume);
     }
 
-    public void Play(SoundEnum soundEnum, AudioSource audioSource, float fadeTime = 0, bool loops = false, float pan = 0)
+    public void Play(SoundEnum soundEnum, AudioSource audioSource, float fadeTime = 0, bool loops = false, float pan = 0, float volume = 1)
     {
-        StartAudioAction(AudioAction.Start, _soundEnumDictionary[soundEnum], fadeTime, loops, pan, audioSource);
+        StartAudioAction(AudioAction.Start, _soundEnumDictionary[soundEnum], fadeTime, loops, pan, volume, audioSource);
     }
 
     public void PlayOneShot(SoundEnum soundEnum, AudioSource audioSource)
@@ -104,7 +104,7 @@ public class AudioManager : MonoBehaviour
 
     public void Stop(AudioSource audioSource, float fadeTime = 0)
     {
-        StartAudioAction(AudioAction.Stop, null, fadeTime, false, 0, audioSource);
+        StartAudioAction(AudioAction.Stop, null, fadeTime, false, 0, 1, audioSource);
     }
 
     public void Restart(SoundEnum soundEnum, float fadeTime = 0, bool loops = false)
@@ -146,7 +146,7 @@ public class AudioManager : MonoBehaviour
         return FindSoundSources(_soundEnumDictionary[sound]).Count != 0;
     }
 
-    private void StartAudioAction(AudioAction action, Sound sound, float fadeTime, bool loops, float pan = 0, AudioSource audioSource = null)
+    private void StartAudioAction(AudioAction action, Sound sound, float fadeTime, bool loops, float pan = 0, float volume = 1, AudioSource audioSource = null)
     {
         if (action is AudioAction.Restart)
         {
@@ -160,13 +160,13 @@ public class AudioManager : MonoBehaviour
             var soundClip = sound.GetClip();
             if (audioSource != null && _jobDictionary.ContainsKey(audioSource) && _jobDictionary[audioSource] != null)
             {
-                StartAudioAction(AudioAction.Stop, null, 0, false, pan, audioSource);
+                StartAudioAction(AudioAction.Stop, null, 0, false, pan, volume, audioSource);
             }
             if (audioSource == null) audioSource = GetEmptySource();
             _jobDictionary[audioSource] = new AudioJob()
             {
                 Sound = sound,
-                Routine = StartCoroutine(AudioActionCoroutine(action, audioSource, sound, soundClip, fadeTime, loops, pan)),
+                Routine = StartCoroutine(AudioActionCoroutine(action, audioSource, sound, soundClip, fadeTime, loops, pan, volume)),
                 Clip = soundClip
             };
         }
@@ -186,18 +186,18 @@ public class AudioManager : MonoBehaviour
                 if (!_jobDictionary.ContainsKey(source)) continue;
                 if (_jobDictionary[source] == null) continue;
                 if (_jobDictionary[source].Routine != null) StopCoroutine(_jobDictionary[source].Routine);
-                _jobDictionary[source].Routine = StartCoroutine(AudioActionCoroutine(action, source, sound, null, fadeTime, loops, pan));
+                _jobDictionary[source].Routine = StartCoroutine(AudioActionCoroutine(action, source, sound, null, fadeTime, loops, pan, 1));
             }
         }
     }
 
-    private IEnumerator AudioActionCoroutine(AudioAction action, AudioSource source, Sound sound, Sound.Clip clip, float fadeTime, bool loops, float pan)
+    private IEnumerator AudioActionCoroutine(AudioAction action, AudioSource source, Sound sound, Sound.Clip clip, float fadeTime, bool loops, float pan, float volume)
     {
         if (action == AudioAction.Start)
         {
             var soundClip = sound.GetClip();
             source.clip = soundClip.AudioClip;
-            source.volume = soundClip.Volume * GetExponentialVolume(MasterVolume) * GetExponentialVolume(ChannelVolumeDictionary[_channelDictionary[sound]]);
+            source.volume = soundClip.Volume * GetExponentialVolume(MasterVolume) * GetExponentialVolume(ChannelVolumeDictionary[_channelDictionary[sound]]) * volume;
             source.pitch = sound.HasPitchVariation ? Random.Range(1 - sound.PitchVariation, 1 + sound.PitchVariation) : 1;
             source.loop = loops;
             source.panStereo = pan;
