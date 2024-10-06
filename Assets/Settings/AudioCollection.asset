@@ -40,6 +40,13 @@ MonoBehaviour:
       HasPitchVariation: 0
       PitchVariation: 0
       Enum: 2
+    - Name: Death
+      Clips:
+      - AudioClip: {fileID: 8300000, guid: d16e672c6ee335e43ad68905fc7de766, type: 3}
+        Volume: 1
+      HasPitchVariation: 0
+      PitchVariation: 0
+      Enum: 3
     Enum: 1
     EditorColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
   - Name: Ambient
@@ -50,14 +57,14 @@ MonoBehaviour:
         Volume: 1
       HasPitchVariation: 0
       PitchVariation: 0
-      Enum: 3
+      Enum: 4
     - Name: Ambient
       Clips:
       - AudioClip: {fileID: 8300000, guid: 588c197ac6e520c4b8812cd79ef3cbcb, type: 3}
         Volume: 1
       HasPitchVariation: 0
       PitchVariation: 0
-      Enum: 4
+      Enum: 5
     Enum: 2
     EditorColor: {r: 0.6367924, g: 0.6367924, b: 1, a: 1}
   EnumsAssigned: 1

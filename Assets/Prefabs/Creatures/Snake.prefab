@@ -104,7 +104,7 @@ MonoBehaviour:
   _spriteRenderer: {fileID: 8955892204846101490}
   _minColor: {r: 0.4245283, g: 0.3670568, b: 0.34242612, a: 1}
   _maxColor: {r: 0.35955858, g: 0.3773585, b: 0.29725882, a: 1}
-  _alertRadius: 3
+  _alertRadius: 6
   _alertTime: 5
   _runningSpeed: 7
   _followDistance: 7

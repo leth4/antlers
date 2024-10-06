@@ -58,6 +58,7 @@ public class GridManager : Singleton<GridManager>
             var nextAdjacent = GridHelper.GetAdjacent(_grid, coords.x, coords.y, true);
             foreach (var tile in nextAdjacent)
             {
+                if (tile == _grid[nearestTile.x, nearestTile.y]) continue;
                 if (!tile.IsTaken && tile.Type == tileType) return tile;
             }
         }
@@ -108,11 +109,16 @@ public class GridManager : Singleton<GridManager>
 
     private void GenerateMines()
     {
-        for (int i = 0; i < Random.Range(_minMines, _maxMines); i++)
+        var count = Random.Range(_minMines, _maxMines);
+        for (int i = 0; i < count; i++)
         {
             _group++;
             var coord = GetRandomCoord();
             _grid[coord.x, coord.y].SetType(TileType.Mine, _group);
+            var adjacent = GridHelper.GetAdjacent(_grid, _grid[coord.x, coord.y], true);
+            adjacent.Shuffle();
+            if (Random.Range(0, 1f) > .4f) adjacent[0].SetType(TileType.Mine, _group);
+            if (Random.Range(0, 1f) > .7f) adjacent[1].SetType(TileType.Mine, _group);
         }
     }
 

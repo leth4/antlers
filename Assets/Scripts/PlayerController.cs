@@ -6,8 +6,6 @@ using UnityEngine;
 
 public class PlayerController : Singleton<PlayerController>
 {
-    public static Vector2 Position => Instance.transform.position;
-
     [SerializeField] private float _movementSpeed = 1;
     [SerializeField] private LayerMask _obstaclesMask;
     [SerializeField] private float _strength;
@@ -19,6 +17,7 @@ public class PlayerController : Singleton<PlayerController>
     private Collider2D[] _colliders = new Collider2D[8];
 
     public bool IsActive;
+    public bool IsVisible;
 
     private void Update()
     {
@@ -40,7 +39,7 @@ public class PlayerController : Singleton<PlayerController>
 
         if (tile?.Type is TileType.Mine)
         {
-            GameManager.Instance.RemoveHealth();
+            GameManager.Instance.HandlePlayerDeath(DeathReason.Mine);
             tile.SetType(TileType.Normal, 0);
         }
 
@@ -77,9 +76,11 @@ public class PlayerController : Singleton<PlayerController>
         var creature = other.GetComponent<Creature>();
         if (creature == null) return;
 
-        if (creature.Strength > _strength) GameManager.Instance.RemoveHealth();
-
-        if (creature.Strength < _strength) GameManager.Instance.AddHealth();
+        if (creature.Strength > _strength)
+        {
+            if (creature is HunterCreature) GameManager.Instance.HandlePlayerDeath(DeathReason.Hunter);
+            if (creature is SnakeCreature) GameManager.Instance.HandlePlayerDeath(DeathReason.Snake);
+        }
 
         creature.Die();
     }

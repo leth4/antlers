@@ -73,7 +73,7 @@ public class HunterCreature : Creature
         {
             if (_followingPlayer)
             {
-                if (Vector3.Distance(transform.position, PlayerController.Position) > _followDistance)
+                if (Vector3.Distance(transform.position, PlayerController.Instance.transform.position) > _followDistance)
                 {
                     _followingPlayer = false;
                     SetState(State.Searching);
@@ -81,9 +81,9 @@ public class HunterCreature : Creature
                 }
 
                 _renderer.sprite = Time.time % .2f > .1f ? _defaultSprite : _walkSprite;
-                _renderer.flipX = transform.position.x > PlayerController.Position.x;
+                _renderer.flipX = transform.position.x > PlayerController.Instance.transform.position.x;
 
-                transform.position += (PlayerController.Position.ToVector3() - transform.position).normalized * _runningSpeed * GetSpeedModifier() * Time.deltaTime;
+                transform.position += (PlayerController.Instance.transform.position - transform.position).normalized * _runningSpeed * GetSpeedModifier() * Time.deltaTime;
             }
             else
             {

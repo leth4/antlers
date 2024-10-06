@@ -29,7 +29,7 @@ public class SnakeCreature : Creature
     {
         if (_state != State.Running)
         {
-            if (Vector3.Distance(transform.position, PlayerController.Position) < _alertRadius && GridManager.Instance.GetTileTypeAt(PlayerController.Position) == TileType.TallGrass)
+            if (Vector3.Distance(transform.position, PlayerController.Instance.transform.position) < _alertRadius && GridManager.Instance.GetTileTypeAt(PlayerController.Instance.transform.position) == TileType.TallGrass)
             {
                 SetState(State.Running);
                 _followTarget = PlayerController.Instance.transform;

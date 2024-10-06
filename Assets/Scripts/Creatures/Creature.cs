@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Foundation;
@@ -5,6 +6,8 @@ using UnityEngine;
 
 public class Creature : MonoBehaviour
 {
+    public static event Action<Creature> OnDied;
+
     [SerializeField] protected float Speed;
     [field: SerializeField] public float Strength { get; private set; }
 
@@ -16,14 +19,14 @@ public class Creature : MonoBehaviour
 
     public void Initialize()
     {
-        _spriteRenderer.color = Color.Lerp(_minColor, _maxColor, Random.Range(0, 1f));
+        _spriteRenderer.color = Color.Lerp(_minColor, _maxColor, UnityEngine.Random.Range(0, 1f));
     }
 
     protected Transform GetNearbyPredator(float radius)
     {
-        if (Vector3.Distance(transform.position, PlayerController.Position) < radius)
+        if (Vector3.Distance(transform.position, PlayerController.Instance.transform.position) < radius)
         {
-            if (GridManager.Instance.GetTileTypeAt(PlayerController.Position) is not TileType.TallGrass) return PlayerController.Instance.transform;
+            if (GridManager.Instance.GetTileTypeAt(PlayerController.Instance.transform.position) is not TileType.TallGrass) return PlayerController.Instance.transform;
         }
 
         var count = Physics2D.OverlapCircleNonAlloc(transform.position, radius, _colliders);
@@ -39,9 +42,9 @@ public class Creature : MonoBehaviour
 
     protected bool CanHearPlayer(float radius)
     {
-        if (Vector3.Distance(transform.position, PlayerController.Position) < radius)
+        if (Vector3.Distance(transform.position, PlayerController.Instance.transform.position) < radius)
         {
-            if (GridManager.Instance.GetTileTypeAt(PlayerController.Position) is not TileType.TallGrass) return true;
+            if (GridManager.Instance.GetTileTypeAt(PlayerController.Instance.transform.position) is not TileType.TallGrass) return true;
         }
         return false;
     }
@@ -50,7 +53,7 @@ public class Creature : MonoBehaviour
     {
         for (int i = 0; i < 50; i++)
         {
-            var direction = Random.insideUnitCircle.normalized;
+            var direction = UnityEngine.Random.insideUnitCircle.normalized;
             var tile = GridManager.Instance.GetTileAt(transform.position + direction.ToVector3() * Speed * time);
             if (tile != null && !tile.IsTaken) return tile;
         }
@@ -78,12 +81,21 @@ public class Creature : MonoBehaviour
 
     public void Die(float delay = 0)
     {
-        Destroy(gameObject, delay);
+        if (delay == 0)
+        {
+            OnDied?.Invoke(this);
+            Destroy(gameObject);
+        }
+        else Tween.Delay(this, delay, () =>
+        {
+            OnDied?.Invoke(this);
+            Destroy(gameObject);
+        });
     }
 
     private float GetStereoPan()
     {
-        var pan = (transform.position.x - PlayerController.Position.x) / 5;
+        var pan = (transform.position.x - PlayerController.Instance.transform.position.x) / 5;
 
         if (pan < -1) pan = -.5f;
         if (pan > 1) pan = .5f;
@@ -93,6 +105,6 @@ public class Creature : MonoBehaviour
 
     private float GetVolume()
     {
-        return 1 - Mathf.Clamp(Vector3.Distance(PlayerController.Position, transform.position) / 15, 0, .8f);
+        return 1 - Mathf.Clamp(Vector3.Distance(PlayerController.Instance.transform.position, transform.position) / 15, 0, .8f);
     }
 }

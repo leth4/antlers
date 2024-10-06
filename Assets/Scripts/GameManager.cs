@@ -7,11 +7,13 @@ using UnityEngine.UI;
 
 public class GameManager : Singleton<GameManager>
 {
+    public bool IsInfiniteMode { get; private set; }
+
     [SerializeField] private GameObject _overlay;
     [SerializeField] private Text _overlayText;
     [SerializeField] private Text _healthCounter;
 
-    private int _healthLeft = 3;
+    private bool _isEndingLevel;
 
     private void Start()
     {
@@ -56,7 +58,7 @@ public class GameManager : Singleton<GameManager>
 
         yield return new WaitForSeconds(.5f);
 
-        _overlayText.text = "YOUR SURVIVED ANOTHER FALL";
+        _overlayText.text = "YOU SURVIVED ANOTHER FALL";
         yield return new WaitForSeconds(2);
         _overlayText.text = "";
         yield return new WaitForSeconds(1);
@@ -71,30 +73,24 @@ public class GameManager : Singleton<GameManager>
         onFinished?.Invoke();
     }
 
-    public void AddHealth()
-    {
-        _healthLeft++;
-        UpdateHealthCounter();
-    }
-
-    public void RemoveHealth()
-    {
-        _healthLeft--;
-        UpdateHealthCounter();
-    }
-
     private void UpdateHealthCounter()
     {
-        var counterWord = _healthLeft != 1 ? "NIGHTS" : "NIGHT";
-        _healthCounter.text = $"{_healthLeft.ToWord()} {counterWord} TO LIVE.";
+        _healthCounter.text = "";
+        // var counterWord = _healthLeft != 1 ? "NIGHTS" : "NIGHT";
+        // _healthCounter.text = $"{_healthLeft.ToWord()} {counterWord} TO LIVE.";
     }
 
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
-            RemoveHealth();
             GenerateLevel();
+        }
+
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            IsInfiniteMode = !IsInfiniteMode;
+            if (IsInfiniteMode) PlayerController.Instance.transform.position = new Vector3(1000, 1000, 0);
         }
 
         if (Input.GetKeyDown(KeyCode.Escape)) Window.Close();
@@ -106,4 +102,50 @@ public class GameManager : Singleton<GameManager>
         GridManager.Instance.GenerateGrid();
         FaunaManager.Instance.GenerateCreatures();
     }
+
+    private void HandleNoDeersLeft()
+    {
+        if (_isEndingLevel) return;
+        StartCoroutine(LevelChangeRoutine());
+    }
+
+    private IEnumerator LevelChangeRoutine(string text = "", float delay = 1f)
+    {
+        _isEndingLevel = true;
+        yield return new WaitForSeconds(delay);
+        _overlay.SetActive(true);
+        _overlayText.text = text;
+        yield return new WaitForSeconds(text == "" ? 1f : 2.5f);
+        _overlay.SetActive(false);
+
+        GenerateLevel();
+
+        _isEndingLevel = false;
+    }
+
+    public void HandlePlayerDeath(DeathReason reason)
+    {
+        AudioManager.Instance.Play(SoundEnum.Death, 0, false);
+        if (reason is DeathReason.Snake) StartCoroutine(LevelChangeRoutine("YOU LOST YOUR LIFE TO A GRASS LURKER.", 0));
+        if (reason is DeathReason.Mine) StartCoroutine(LevelChangeRoutine("YOU LOST YOUR LIFE TO AN ELECTRIC LANDMINE.", 0));
+        if (reason is DeathReason.Hunter) StartCoroutine(LevelChangeRoutine("YOU LOST YOUR LIFE TO A DOUBLE-HEADED DOG.", 0));
+    }
+
+    private void OnEnable()
+    {
+        FaunaManager.OnNoDeersLeft += HandleNoDeersLeft;
+    }
+
+    private void OnDisable()
+    {
+        FaunaManager.OnNoDeersLeft -= HandleNoDeersLeft;
+    }
+}
+
+public enum DeathReason
+{
+    Snake,
+    Hunter,
+    Hunger,
+    Mine
 }

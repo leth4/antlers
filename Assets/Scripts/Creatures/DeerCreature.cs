@@ -13,6 +13,7 @@ public class DeerCreature : Creature
 
     [SerializeField] private SpriteRenderer _renderer;
     [SerializeField] private Sprite _defaultSprite;
+    [SerializeField] private Sprite _deadSprite;
     [SerializeField] private Sprite _walkSprite;
     [SerializeField] private Sprite _eatSprite;
 
@@ -30,6 +31,8 @@ public class DeerCreature : Creature
 
     private void Update()
     {
+        if (_state is State.Dead) return;
+
         if (_state != State.Alert && _state != State.Running)
         {
             var predator = GetNearbyPredator(_alertRadius);
@@ -159,6 +162,10 @@ public class DeerCreature : Creature
         {
             if (_currentTarget != null) _currentTarget.IsTaken = false;
         }
+        else if (_state is State.Dead)
+        {
+            _renderer.sprite = _deadSprite;
+        }
     }
 
     private bool IsAtTarget()
@@ -188,6 +195,7 @@ public class DeerCreature : Creature
         Idle,
         Eating,
         Alert,
-        Running
+        Running,
+        Dead
     }
 }
