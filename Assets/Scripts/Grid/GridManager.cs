@@ -69,6 +69,26 @@ public class GridManager : Singleton<GridManager>
         return null;
     }
 
+    public void TurnNeighborsInto(Vector3 position, TileType tileType)
+    {
+        var nearestTile = new Vector2Int(Mathf.RoundToInt(position.x), Mathf.RoundToInt(position.y));
+        if (!GridHelper.IsValidCoordinates(_grid, nearestTile)) return;
+
+        var adjacent = GridHelper.GetAdjacentCoordinates(_grid, nearestTile.x, nearestTile.y, true);
+        foreach (var coords in adjacent)
+        {
+            var nextAdjacent = GridHelper.GetAdjacentCoordinates(_grid, coords.x, coords.y, false);
+            foreach (var nextCoords in nextAdjacent)
+            {
+                var nextNextAdjacent = GridHelper.GetAdjacent(_grid, nextCoords.x, nextCoords.y, false);
+                foreach (var tile in nextNextAdjacent)
+                {
+                    tile.SetType(tileType, 0);
+                }
+            }
+        }
+    }
+
     public Tile GetRandomTallGrass()
     {
         _tallGrass.Shuffle();

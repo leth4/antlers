@@ -12,6 +12,7 @@ public class FaunaManager : Singleton<FaunaManager>
     [SerializeField] private Creature _hunterPrefab;
     [SerializeField] private Creature _deerPrefab;
     [SerializeField] private Creature _snakePrefab;
+    [SerializeField] private Creature _mulePrefab;
 
     private bool _detectingEnding;
 
@@ -21,6 +22,8 @@ public class FaunaManager : Singleton<FaunaManager>
     {
         _creatures.ForEach(creature => { if (creature != null) Destroy(creature.gameObject); });
         _creatures = new();
+
+        var haveMules = Random.Range(0, 1f) > .4f;
 
         for (int i = 0; i < Random.Range(3, 6); i++)
         {
@@ -32,6 +35,11 @@ public class FaunaManager : Singleton<FaunaManager>
             _creatures.Add(Instantiate(_hunterPrefab, GetRandomPositionInBounds(7), Quaternion.identity));
             _creatures[^1].Initialize();
         }
+        if (haveMules) for (int i = 0; i < Random.Range(1, 3); i++)
+            {
+                _creatures.Add(Instantiate(_mulePrefab, GetRandomPositionInBounds(6), Quaternion.identity));
+                _creatures[^1].Initialize();
+            }
         for (int i = 0; i < Random.Range(0, 3); i++)
         {
             for (int j = 0; j < 30; j++)

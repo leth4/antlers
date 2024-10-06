@@ -41,7 +41,7 @@ public class PlayerController : Singleton<PlayerController>
             if (!_wasInTallGrass)
             {
                 StopAllCoroutines();
-                StartCoroutine(WindVolumeRoutine(.5f));
+                StartCoroutine(WindVolumeRoutine(.65f));
             }
             _wasInTallGrass = true;
             movementSpeed *= .8f;
@@ -101,6 +101,8 @@ public class PlayerController : Singleton<PlayerController>
             if (creature is HunterCreature) GameManager.Instance.HandlePlayerDeath(DeathReason.Hunter);
             if (creature is SnakeCreature) GameManager.Instance.HandlePlayerDeath(DeathReason.Snake);
         }
+
+        if (creature is DeerCreature) GameManager.Instance.HandleFoundFood();
 
         creature.Die();
     }

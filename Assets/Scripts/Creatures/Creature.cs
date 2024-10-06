@@ -68,7 +68,7 @@ public class Creature : MonoBehaviour
         for (int i = 0; i < count; i++)
         {
             var creature = _colliders[i]?.GetComponent<Creature>();
-            if (creature != null && creature != this && creature.Strength < maxStrength) return creature;
+            if (creature != null && creature != this && creature.Strength < maxStrength && creature.Strength > 0) return creature;
         }
 
         return null;
@@ -79,7 +79,7 @@ public class Creature : MonoBehaviour
         AudioManager.Instance.Play(sound, 0, false, GetStereoPan(), GetVolume());
     }
 
-    public void Die(float delay = 0)
+    public virtual void Die(float delay = 0)
     {
         if (delay == 0)
         {

@@ -45,17 +45,22 @@ public class GameManager : Singleton<GameManager>
         if (!_haveSeenTutorial)
         {
             _overlayText.text = "HUMAN IN A WORLD OF MACHINES";
-            yield return new WaitForSeconds(3);
+            yield return new WaitForSeconds(3.5f);
             _overlayText.text = "";
             yield return new WaitForSeconds(1);
 
             _overlayText.text = "THE YEAR WAS LONG, BUT IT'S WINTER SOON";
-            yield return new WaitForSeconds(3);
+            yield return new WaitForSeconds(3.5f);
             _overlayText.text = "";
             yield return new WaitForSeconds(1);
 
             _overlayText.text = "MOVE WITH [WASD] or [↑←↓→]";
-            yield return new WaitForSeconds(3);
+            yield return new WaitForSeconds(3.5f);
+            _overlayText.text = "";
+            yield return new WaitForSeconds(1);
+
+            _overlayText.text = "HUNT A DEER TO SURVIVE A NIGHT. BIOTECH IS AN AQUIRED TASTE";
+            yield return new WaitForSeconds(3.5f);
             _overlayText.text = "";
             yield return new WaitForSeconds(1);
         }
@@ -145,11 +150,23 @@ public class GameManager : Singleton<GameManager>
 
     private void GenerateLevel()
     {
+        AudioManager.Instance.SetChannelVolume(ChannelEnum.Ambient, 1);
         GridManager.Instance.GenerateGrid();
         FaunaManager.Instance.GenerateCreatures();
     }
 
     private void HandleNoDeersLeft()
+    {
+        if (IsInfiniteMode) return;
+        if (_isEndingLevel) return;
+        _isEndingLevel = true;
+
+        _currentLevel = 0;
+        AudioManager.Instance.Play(SoundEnum.Death, 0, false);
+        StartCoroutine(DeathRoutine("YOU LOST YOUR LIFE TO HUNGER"));
+    }
+
+    public void HandleFoundFood()
     {
         if (IsInfiniteMode) return;
         if (_isEndingLevel) return;
@@ -179,7 +196,7 @@ public class GameManager : Singleton<GameManager>
         UnloadEverything();
         _isEndingLevel = true;
         _overlay.SetActive(true);
-        _overlayText.text = text + $"\n...ON NOVEMBER {21 + _currentLevel}.";
+        _overlayText.text = text + $"\nON NOVEMBER {21 + _currentLevel}.";
         yield return new WaitForSeconds(3);
         _isEndingLevel = false;
         SceneDirector.RestartScene();

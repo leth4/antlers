@@ -250,6 +250,7 @@ MonoBehaviour:
   _hunterPrefab: {fileID: 274787788070075984, guid: 37c62a9ba3ed2e74d9a83c79d3a16b63, type: 3}
   _deerPrefab: {fileID: 2437836697486607225, guid: 4bdae2b09ae329a47b1225d287d1792c, type: 3}
   _snakePrefab: {fileID: 7546199494640601827, guid: 6640e891e9998ab4cb9f52f3374ca1d7, type: 3}
+  _mulePrefab: {fileID: 6372309696812122316, guid: a90ed9b497390c642b621c6a512725a0, type: 3}
 --- !u!114 &194254348
 MonoBehaviour:
   m_ObjectHideFlags: 0
