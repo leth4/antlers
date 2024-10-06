@@ -44,5 +44,6 @@ public enum TileType
     Grass,
     TallGrass,
     Swamp,
-    Junk
+    Junk,
+    Mine
 }

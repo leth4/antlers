@@ -28,10 +28,18 @@ public class PlayerController : Singleton<PlayerController>
         var verticalMovement = Input.GetAxisRaw("Vertical");
 
         var movementSpeed = _movementSpeed;
-        var tile = GridManager.Instance.GetTileTypeAt(transform.position);
-        if (tile is TileType.Grass) movementSpeed *= .9f;
-        if (tile is TileType.TallGrass) movementSpeed *= .8f;
-        if (tile is TileType.Swamp) movementSpeed *= .8f;
+
+        var tile = GridManager.Instance.GetTileAt(transform.position);
+        if (tile?.Type is TileType.Grass) movementSpeed *= .9f;
+        if (tile?.Type is TileType.TallGrass) movementSpeed *= .8f;
+        if (tile?.Type is TileType.Swamp) movementSpeed *= .8f;
+
+        if (tile?.Type is TileType.Mine)
+        {
+            GameManager.Instance.RemoveHealth();
+            tile.SetType(TileType.Normal, 0);
+        }
+
 
         var movement = new Vector2(horizontalMovement, verticalMovement);
 

@@ -31,6 +31,10 @@ public class GridManager : Singleton<GridManager>
     [SerializeField] private int _minSwampGrassChunks;
     [SerializeField] private int _maxSwampGrassChunks;
 
+    [Header("Mines")]
+    [SerializeField] private int _minMines;
+    [SerializeField] private int _maxMines;
+
     private Tile[,] _grid;
     private int _group;
 
@@ -45,11 +49,15 @@ public class GridManager : Singleton<GridManager>
         var nearestTile = new Vector2Int(Mathf.RoundToInt(position.x), Mathf.RoundToInt(position.y));
         if (!GridHelper.IsValidCoordinates(_grid, nearestTile)) return null;
 
-        var adjacent = GridHelper.GetAdjacent(_grid, nearestTile.x, nearestTile.y, true);
+        var adjacentCoords = GridHelper.GetAdjacentCoordinates(_grid, nearestTile.x, nearestTile.y, true);
 
-        foreach (var tile in adjacent)
+        foreach (var coords in adjacentCoords)
         {
-            if (!tile.IsTaken && tile.Type == tileType) return tile;
+            var nextAdjacent = GridHelper.GetAdjacent(_grid, coords.x, coords.y, true);
+            foreach (var tile in nextAdjacent)
+            {
+                if (!tile.IsTaken && tile.Type == tileType) return tile;
+            }
         }
 
         return null;
@@ -81,10 +89,22 @@ public class GridManager : Singleton<GridManager>
         GenerateTallGrass();
         GenerateGrass();
 
-        ClearUp();
+        GenerateJunk();
+
+        GenerateMines();
     }
 
-    private void ClearUp()
+    private void GenerateMines()
+    {
+        for (int i = 0; i < Random.Range(_minMines, _maxMines); i++)
+        {
+            _group++;
+            var coord = GetRandomCoord();
+            _grid[coord.x, coord.y].SetType(TileType.Mine, _group);
+        }
+    }
+
+    private void GenerateJunk()
     {
         for (int i = 0; i < Random.Range(3, 6); i++)
         {
@@ -196,6 +216,7 @@ public class GridManager : Singleton<GridManager>
             TileType.TallGrass => _sprites[3],
             TileType.Swamp => _sprites[4],
             TileType.Junk => _sprites[Random.Range(5, 8)],
+            TileType.Mine => _sprites[8],
             _ => _sprites[0]
         };
     }

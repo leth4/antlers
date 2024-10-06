@@ -94,7 +94,7 @@ public class DeerCreature : Creature
     {
         transform.position = Vector3.MoveTowards(transform.position, _currentTarget.transform.position.SetZ(0), Speed * GetSpeedModifier() * Time.deltaTime);
 
-        _renderer.sprite = Time.time % .5f > .25f ? _defaultSprite : _walkSprite;
+        _renderer.sprite = Time.time % .4f > .2f ? _defaultSprite : _walkSprite;
         _renderer.flipX = transform.position.x > _currentTarget.transform.position.x;
 
         if (IsAtTarget())
@@ -163,9 +163,15 @@ public class DeerCreature : Creature
 
     private float GetSpeedModifier()
     {
-        var tile = GridManager.Instance.GetTileTypeAt(transform.position);
-        if (tile is TileType.TallGrass) return .8f;
-        if (tile is TileType.Swamp) return .4f;
+        var tile = GridManager.Instance.GetTileAt(transform.position);
+        if (tile?.Type is TileType.TallGrass) return .8f;
+        if (tile?.Type is TileType.Swamp) return .4f;
+
+        if (tile?.Type is TileType.Mine) {
+            Die();
+            tile.SetType(TileType.Normal, 0);
+        }
+
         return 1;
     }
 

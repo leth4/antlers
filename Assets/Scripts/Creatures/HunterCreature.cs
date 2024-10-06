@@ -14,6 +14,11 @@ public class HunterCreature : Creature
 
     [SerializeField] private float _runningSpeed;
 
+    [SerializeField] private SpriteRenderer _renderer;
+    [SerializeField] private Sprite _defaultSprite;
+    [SerializeField] private Sprite _walkSprite;
+    [SerializeField] private Sprite _eatSprite;
+
     private Tile _tileTarget;
     private Creature _creatureTarget;
     private float _currentTimer;
@@ -50,6 +55,10 @@ public class HunterCreature : Creature
         if (_state is State.Searching)
         {
             transform.position = Vector3.MoveTowards(transform.position, _tileTarget.transform.position.SetZ(0), Speed * GetSpeedModifier() * Time.deltaTime);
+
+            _renderer.sprite = Time.time % .4f > .2f ? _defaultSprite : _walkSprite;
+            _renderer.flipX = transform.position.x > _tileTarget.transform.position.x;
+
             if (IsAtTarget()) SetState(State.Idle);
         }
         if (_state is State.Idle)
@@ -71,6 +80,9 @@ public class HunterCreature : Creature
                     return;
                 }
 
+                _renderer.sprite = Time.time % .2f > .1f ? _defaultSprite : _walkSprite;
+                _renderer.flipX = transform.position.x > PlayerController.Position.x;
+
                 transform.position += (PlayerController.Position.ToVector3() - transform.position).normalized * _runningSpeed * GetSpeedModifier() * Time.deltaTime;
             }
             else
@@ -80,6 +92,9 @@ public class HunterCreature : Creature
                     SetState(State.Searching);
                     return;
                 }
+
+                _renderer.sprite = Time.time % .2f > .1f ? _defaultSprite : _walkSprite;
+                _renderer.flipX = transform.position.x > _creatureTarget.transform.position.x;
 
                 transform.position += (_creatureTarget.transform.position - transform.position).normalized * _runningSpeed * GetSpeedModifier() * Time.deltaTime;
             }
@@ -102,6 +117,8 @@ public class HunterCreature : Creature
             _tileTarget.IsTaken = true;
 
             _followingPlayer = false;
+
+            _renderer.sprite = _defaultSprite;
         }
         if (_state is State.Idle)
         {
@@ -110,11 +127,15 @@ public class HunterCreature : Creature
             AudioManager.Instance.Play(SoundEnum.HunterSearch, 0, false, GetStereoPan());
 
             if (_tileTarget != null) _tileTarget.IsTaken = true;
+
+            _renderer.sprite = _defaultSprite;
         }
         if (_state is State.Alert)
         {
             AudioManager.Instance.Play(SoundEnum.HunterFind, 0, false, GetStereoPan());
             _currentTimer = _alertTime;
+
+            _renderer.sprite = _defaultSprite;
         }
         if (_state is State.Running)
         {
@@ -131,9 +152,16 @@ public class HunterCreature : Creature
 
     private float GetSpeedModifier()
     {
-        var tile = GridManager.Instance.GetTileTypeAt(transform.position);
-        if (tile is TileType.TallGrass) return .8f;
-        if (tile is TileType.Swamp) return .6f;
+        var tile = GridManager.Instance.GetTileAt(transform.position);
+        if (tile?.Type is TileType.TallGrass) return .8f;
+        if (tile?.Type is TileType.Swamp) return .6f;
+
+        if (tile?.Type is TileType.Mine)
+        {
+            Die();
+            tile.SetType(TileType.Normal, 0);
+        }
+
         return 1;
     }
 
