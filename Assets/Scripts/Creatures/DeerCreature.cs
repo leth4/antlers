@@ -17,6 +17,8 @@ public class DeerCreature : Creature
     [SerializeField] private Sprite _walkSprite;
     [SerializeField] private Sprite _eatSprite;
 
+    public bool IsDead => _state == State.Dead;
+
     private State _state;
 
     private float _currentTimer;
@@ -31,7 +33,11 @@ public class DeerCreature : Creature
 
     private void Update()
     {
-        if (_state is State.Dead) return;
+        if (_state is State.Dead)
+        {
+            _renderer.sprite = _deadSprite;
+            return;
+        }
 
         if (_state != State.Alert && _state != State.Running)
         {
@@ -182,7 +188,8 @@ public class DeerCreature : Creature
 
         if (tile?.Type is TileType.Mine)
         {
-            Die();
+            PlaySound(SoundEnum.Mine);
+            SetState(State.Dead);
             tile.SetType(TileType.Normal, 0);
         }
 

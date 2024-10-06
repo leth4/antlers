@@ -34,7 +34,7 @@ public class HunterCreature : Creature
 
     private void Update()
     {
-        if (_state != State.Alert && _state != State.Running)
+        if (_state != State.Alert && _state != State.Running && _state != State.Eating)
         {
             if (CanHearPlayer(_searchDistance))
             {
@@ -62,6 +62,10 @@ public class HunterCreature : Creature
             if (IsAtTarget()) SetState(State.Idle);
         }
         if (_state is State.Idle)
+        {
+            if (_currentTimer <= 0) SetState(State.Searching);
+        }
+        if (_state is State.Eating)
         {
             if (_currentTimer <= 0) SetState(State.Searching);
         }
@@ -125,6 +129,16 @@ public class HunterCreature : Creature
 
             _renderer.sprite = _defaultSprite;
         }
+        if (_state is State.Eating)
+        {
+            _currentTimer = Random.Range(4, 5f);
+
+            PlaySound(SoundEnum.HunterFind);
+
+            if (_tileTarget != null) _tileTarget.IsTaken = true;
+
+            _renderer.sprite = _defaultSprite;
+        }
         if (_state is State.Idle)
         {
             _currentTimer = Random.Range(2f, 2.5f);
@@ -133,7 +147,7 @@ public class HunterCreature : Creature
 
             if (_tileTarget != null) _tileTarget.IsTaken = true;
 
-            _renderer.sprite = _defaultSprite;
+            _renderer.sprite = _eatSprite;
         }
         if (_state is State.Alert)
         {
@@ -164,6 +178,7 @@ public class HunterCreature : Creature
 
         if (tile?.Type is TileType.Mine)
         {
+            PlaySound(SoundEnum.Mine);
             Die();
             tile.SetType(TileType.Normal, 0);
         }
@@ -176,13 +191,18 @@ public class HunterCreature : Creature
         var creature = other.GetComponent<Creature>();
         if (creature == null) return;
 
-        if (creature.Strength < Strength) creature.Die();
+        if (creature.Strength < Strength)
+        {
+            creature.Die();
+            SetState(State.Eating);
+        }
         else if (creature.Strength > Strength) Die();
     }
 
     private enum State
     {
         Searching,
+        Eating,
         Idle,
         Alert,
         Running

@@ -20,6 +20,7 @@ public class FaunaManager : Singleton<FaunaManager>
     public void GenerateCreatures()
     {
         _creatures.ForEach(creature => { if (creature != null) Destroy(creature.gameObject); });
+        _creatures = new();
 
         for (int i = 0; i < Random.Range(3, 6); i++)
         {
@@ -44,6 +45,12 @@ public class FaunaManager : Singleton<FaunaManager>
             }
         }
         _detectingEnding = true;
+    }
+
+    public void DestroyCreatures()
+    {
+        _creatures.ForEach(creature => { if (creature != null) Destroy(creature.gameObject); });
+        _creatures = new();
     }
 
     private Vector3 GetRandomPositionInBounds(float minDistanceToPlayer)

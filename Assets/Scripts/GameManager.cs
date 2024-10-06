@@ -24,12 +24,14 @@ public class GameManager : Singleton<GameManager>
 
     private void Start()
     {
-        // StartCoroutine(GameIntroRoutine(() =>
-        // {
-        if (!AudioManager.Instance.IsPlaying(SoundEnum.Wind)) AudioManager.Instance.Play(SoundEnum.Wind, 0, true);
-        GenerateLevel();
-        PlayerController.Instance.IsActive = true;
-        // }));
+        _haveSeenTutorial = true; // TEMP
+
+        StartCoroutine(GameIntroRoutine(() =>
+        {
+            if (!AudioManager.Instance.IsPlaying(SoundEnum.Wind)) AudioManager.Instance.Play(SoundEnum.Wind, 0, true);
+            GenerateLevel();
+            PlayerController.Instance.IsActive = true;
+        }));
     }
 
     private IEnumerator GameIntroRoutine(Action onFinished)
@@ -43,23 +45,23 @@ public class GameManager : Singleton<GameManager>
         if (!_haveSeenTutorial)
         {
             _overlayText.text = "HUMAN IN A WORLD OF MACHINES";
-            yield return new WaitForSeconds(2);
+            yield return new WaitForSeconds(3);
             _overlayText.text = "";
             yield return new WaitForSeconds(1);
 
-            _overlayText.text = "THE YEAR WAS LONG, BUT THE WINTER IS SOON";
-            yield return new WaitForSeconds(2);
+            _overlayText.text = "THE YEAR WAS LONG, BUT IT'S WINTER SOON";
+            yield return new WaitForSeconds(3);
             _overlayText.text = "";
             yield return new WaitForSeconds(1);
 
             _overlayText.text = "MOVE WITH [WASD] or [↑←↓→]";
-            yield return new WaitForSeconds(2);
+            yield return new WaitForSeconds(3);
             _overlayText.text = "";
             yield return new WaitForSeconds(1);
         }
         else
         {
-            _overlayText.text = "THE YEAR WAS LONG, BUT THE WINTER IS SOON";
+            _overlayText.text = "THE YEAR WAS LONG, BUT IT'S WINTER SOON";
             yield return new WaitForSeconds(2);
             _overlayText.text = "";
             yield return new WaitForSeconds(1);
@@ -104,7 +106,7 @@ public class GameManager : Singleton<GameManager>
         _overlayText.text = "PRESS [K] FOR IDLE MODE, THEN [R] TO SWITCH";
         yield return new WaitForSecondsRealtime(4);
         _overlayText.text = "";
-        yield return new WaitForSecondsRealtime(10);
+        yield return new WaitForSecondsRealtime(3);
 
         SceneDirector.RestartScene();
     }
@@ -153,8 +155,7 @@ public class GameManager : Singleton<GameManager>
         if (_isEndingLevel) return;
         _isEndingLevel = true;
         _currentLevel++;
-        // if (_currentLevel == 10) StartCoroutine(GameEndingRoutine());
-        if (_currentLevel == 2) StartCoroutine(GameEndingRoutine());
+        if (_currentLevel == 10) StartCoroutine(GameEndingRoutine());
         else StartCoroutine(LevelChangeRoutine());
     }
 
@@ -162,6 +163,7 @@ public class GameManager : Singleton<GameManager>
     {
         _isEndingLevel = true;
         yield return new WaitForSeconds(.5f);
+        UnloadEverything();
         _overlay.SetActive(true);
         _overlayText.text = $"NOVEMBER {21 + _currentLevel}";
         yield return new WaitForSeconds(1f);
@@ -174,12 +176,18 @@ public class GameManager : Singleton<GameManager>
 
     private IEnumerator DeathRoutine(string text)
     {
+        UnloadEverything();
         _isEndingLevel = true;
         _overlay.SetActive(true);
         _overlayText.text = text + $"\n...ON NOVEMBER {21 + _currentLevel}.";
         yield return new WaitForSeconds(3);
         _isEndingLevel = false;
         SceneDirector.RestartScene();
+    }
+
+    private void UnloadEverything()
+    {
+        FaunaManager.Instance.DestroyCreatures();
     }
 
     public void HandlePlayerDeath(DeathReason reason)

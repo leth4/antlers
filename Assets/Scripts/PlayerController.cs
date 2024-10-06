@@ -56,6 +56,8 @@ public class PlayerController : Singleton<PlayerController>
 
         if (tile?.Type is TileType.Mine)
         {
+            AudioManager.Instance.Play(SoundEnum.Mine);
+            IsActive = false;
             GameManager.Instance.HandlePlayerDeath(DeathReason.Mine);
             tile.SetType(TileType.Normal, 0);
         }
@@ -95,6 +97,7 @@ public class PlayerController : Singleton<PlayerController>
 
         if (creature.Strength > _strength)
         {
+            IsActive = false;
             if (creature is HunterCreature) GameManager.Instance.HandlePlayerDeath(DeathReason.Hunter);
             if (creature is SnakeCreature) GameManager.Instance.HandlePlayerDeath(DeathReason.Snake);
         }

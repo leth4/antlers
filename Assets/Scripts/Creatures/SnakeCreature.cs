@@ -116,6 +116,7 @@ public class SnakeCreature : Creature
 
         if (tile?.Type is TileType.Mine)
         {
+            PlaySound(SoundEnum.Mine);
             Die();
             tile.SetType(TileType.Normal, 0);
         }

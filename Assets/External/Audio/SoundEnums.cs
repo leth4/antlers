@@ -12,6 +12,7 @@ public enum SoundEnum
 	HunterSearch = 0,
 	HunterFind = 1,
 	Death = 2,
-	Wind = 3,
-	Ambient = 4,
+	Mine = 3,
+	Wind = 4,
+	Ambient = 5,
 }
