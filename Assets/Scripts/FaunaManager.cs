@@ -18,15 +18,20 @@ public class FaunaManager : Singleton<FaunaManager>
 
     private List<Creature> _creatures = new();
 
+    private float _deerLeft;
+
     public void GenerateCreatures()
     {
+        _detectingEnding = false;
         _creatures.ForEach(creature => { if (creature != null) Destroy(creature.gameObject); });
         _creatures = new();
+        _deerLeft = 0;
 
         var haveMules = Random.Range(0, 1f) > .4f;
 
         for (int i = 0; i < Random.Range(3, 6); i++)
         {
+            _deerLeft++;
             _creatures.Add(Instantiate(_deerPrefab, GetRandomPositionInBounds(6), Quaternion.identity));
             _creatures[^1].Initialize();
         }
@@ -35,7 +40,7 @@ public class FaunaManager : Singleton<FaunaManager>
             _creatures.Add(Instantiate(_hunterPrefab, GetRandomPositionInBounds(7), Quaternion.identity));
             _creatures[^1].Initialize();
         }
-        if (haveMules) for (int i = 0; i < Random.Range(1, 3); i++)
+        if (haveMules) for (int i = 0; i < 1; i++)
             {
                 _creatures.Add(Instantiate(_mulePrefab, GetRandomPositionInBounds(6), Quaternion.identity));
                 _creatures[^1].Initialize();
@@ -46,7 +51,7 @@ public class FaunaManager : Singleton<FaunaManager>
             {
                 var tile = GridManager.Instance.GetRandomTallGrass();
                 if (tile == null) break;
-                if ((GridManager.Instance.GetTileTypeAt(PlayerController.Instance.transform.position) is TileType.TallGrass) && Vector3.Distance(tile.transform.position, PlayerController.Instance.transform.position) < 8) continue;
+                if (Vector3.Distance(tile.transform.position.SetZ(0), PlayerController.Instance.transform.position) < 8) continue;
                 _creatures.Add(Instantiate(_snakePrefab, tile.transform.position.SetZ(0), Quaternion.identity));
                 _creatures[^1].Initialize();
                 break;
@@ -57,6 +62,7 @@ public class FaunaManager : Singleton<FaunaManager>
 
     public void DestroyCreatures()
     {
+        _detectingEnding = false;
         _creatures.ForEach(creature => { if (creature != null) Destroy(creature.gameObject); });
         _creatures = new();
     }
@@ -65,7 +71,7 @@ public class FaunaManager : Singleton<FaunaManager>
     {
         for (int i = 0; i < 30; i++)
         {
-            var position = new Vector3(Random.Range(0, 35), Random.Range(0, 15), 0);
+            var position = new Vector3(Random.Range(1, 35), Random.Range(1, 15), 0);
             if (Vector3.Distance(position, PlayerController.Instance.transform.position) > minDistanceToPlayer) return position;
         }
         Debug.LogWarning("Can't find a position");
@@ -74,11 +80,10 @@ public class FaunaManager : Singleton<FaunaManager>
 
     private void HandleCreatureDied(Creature deadCreature)
     {
+        if (deadCreature is DeerCreature) _deerLeft--;
         if (!_detectingEnding) return;
-        foreach (var creature in _creatures)
-        {
-            if (creature != null && creature != deadCreature && creature is DeerCreature) return;
-        }
+        Debug.Log(_deerLeft);
+        if (_deerLeft > 0) return;
         OnNoDeersLeft?.Invoke();
         _detectingEnding = false;
     }

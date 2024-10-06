@@ -99,6 +99,7 @@ public class SnakeCreature : Creature
         }
         else if (_state is State.Running)
         {
+            PlaySound(SoundEnum.Snake);
             if (_tileTarget != null) _tileTarget.IsTaken = false;
         }
     }

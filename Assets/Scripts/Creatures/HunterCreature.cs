@@ -173,7 +173,7 @@ public class HunterCreature : Creature
     private float GetSpeedModifier()
     {
         var tile = GridManager.Instance.GetTileAt(transform.position);
-        if (tile?.Type is TileType.TallGrass) return .8f;
+        if (tile?.Type is TileType.TallGrass) return .9f;
         if (tile?.Type is TileType.Swamp) return .6f;
 
         if (tile?.Type is TileType.Mine)

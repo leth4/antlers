@@ -35,7 +35,6 @@ public class PlayerController : Singleton<PlayerController>
         var movementSpeed = _movementSpeed;
 
         var tile = GridManager.Instance.GetTileAt(transform.position);
-        if (tile?.Type is TileType.Grass) movementSpeed *= .9f;
         if (tile?.Type is TileType.TallGrass)
         {
             if (!_wasInTallGrass)
@@ -44,7 +43,7 @@ public class PlayerController : Singleton<PlayerController>
                 StartCoroutine(WindVolumeRoutine(.65f));
             }
             _wasInTallGrass = true;
-            movementSpeed *= .8f;
+            movementSpeed *= .9f;
         }
         else if (_wasInTallGrass)
         {

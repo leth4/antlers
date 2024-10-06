@@ -43,6 +43,13 @@ MonoBehaviour:
       HasPitchVariation: 0
       PitchVariation: 0
       Enum: 3
+    - Name: Snake
+      Clips:
+      - AudioClip: {fileID: 8300000, guid: 31027fc80affd0c4da34ecb88a9102bd, type: 3}
+        Volume: 0.49
+      HasPitchVariation: 0
+      PitchVariation: 0
+      Enum: 4
     Enum: 0
     EditorColor: {r: 0.6226415, g: 0.496351, b: 0.496351, a: 1}
   - Name: Ambient
@@ -50,10 +57,17 @@ MonoBehaviour:
     - Name: Wind
       Clips:
       - AudioClip: {fileID: 8300000, guid: 28268d9deacf9e94a91f836830b881ae, type: 3}
+        Volume: 0.524
+      HasPitchVariation: 0
+      PitchVariation: 0
+      Enum: 5
+    - Name: Random
+      Clips:
+      - AudioClip: {fileID: 8300000, guid: 2a512f330f5b61840b2e3a99d437dbaf, type: 3}
         Volume: 1
       HasPitchVariation: 0
       PitchVariation: 0
-      Enum: 4
+      Enum: 6
     Enum: 1
     EditorColor: {r: 0.5147405, g: 0.5943396, b: 0.4457547, a: 1}
   - Name: Music
@@ -64,7 +78,7 @@ MonoBehaviour:
         Volume: 1
       HasPitchVariation: 0
       PitchVariation: 0.112
-      Enum: 5
+      Enum: 7
     Enum: 2
     EditorColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
   EnumsAssigned: 1

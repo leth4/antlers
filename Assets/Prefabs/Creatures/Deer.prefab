@@ -104,7 +104,7 @@ MonoBehaviour:
   _minColor: {r: 0.49056602, g: 0.43734422, b: 0.43734422, a: 1}
   _maxColor: {r: 0.4339623, g: 0.37459952, b: 0.37459952, a: 1}
   _alertRadius: 4
-  _alertTime: 0.3
+  _alertTime: 0.2
   _runningSpeed: 8
   _renderer: {fileID: 3966815133334702221}
   _defaultSprite: {fileID: 21300000, guid: c99650b495d70e34b90ef31711dd8960, type: 3}

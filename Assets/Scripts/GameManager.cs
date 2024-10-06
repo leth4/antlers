@@ -32,6 +32,17 @@ public class GameManager : Singleton<GameManager>
             GenerateLevel();
             PlayerController.Instance.IsActive = true;
         }));
+
+        StartCoroutine(RandomSoundRoutine(SoundEnum.Random, 5, 15));
+    }
+
+    private IEnumerator RandomSoundRoutine(SoundEnum sound, float minTime, float maxTime)
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(UnityEngine.Random.Range(minTime, maxTime));
+            AudioManager.Instance.Play(sound);
+        }
     }
 
     private IEnumerator GameIntroRoutine(Action onFinished)
@@ -127,11 +138,10 @@ public class GameManager : Singleton<GameManager>
                 GenerateLevel();
             }
         }
-
         else if (Input.GetKeyDown(KeyCode.R))
         {
-            // GenerateLevel();
-            HandleNoDeersLeft();
+            GenerateLevel();
+            // HandleNoDeersLeft();
         }
 
         if (Input.GetKeyDown(KeyCode.K))
