@@ -69,6 +69,8 @@ public class MuleCreature : Creature
         }
         if (_state is State.Idle)
         {
+            PlaySound(SoundEnum.Mule);
+
             _renderer.sprite = _defaultSprite;
 
             _currentTimer = Random.Range(1, 2);
@@ -86,6 +88,8 @@ public class MuleCreature : Creature
     public override void Die(float delay = 0)
     {
         base.Die(0);
+
+        PlaySound(SoundEnum.MuleDie);
 
         GridManager.Instance.TurnCircleNeighborsInto(transform.position, TileType.TallGrass);
     }

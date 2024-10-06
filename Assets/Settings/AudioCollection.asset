@@ -50,6 +50,20 @@ MonoBehaviour:
       HasPitchVariation: 0
       PitchVariation: 0
       Enum: 4
+    - Name: Mule
+      Clips:
+      - AudioClip: {fileID: 8300000, guid: 956b16f0d5d05fd45858b8dee78b3226, type: 3}
+        Volume: 0.629
+      HasPitchVariation: 0
+      PitchVariation: 0
+      Enum: 5
+    - Name: MuleDie
+      Clips:
+      - AudioClip: {fileID: 8300000, guid: 0e510404a1296274f94b58d6ed01dbcb, type: 3}
+        Volume: 0.559
+      HasPitchVariation: 0
+      PitchVariation: 0
+      Enum: 6
     Enum: 0
     EditorColor: {r: 0.6226415, g: 0.496351, b: 0.496351, a: 1}
   - Name: Ambient
@@ -60,14 +74,14 @@ MonoBehaviour:
         Volume: 0.713
       HasPitchVariation: 0
       PitchVariation: 0
-      Enum: 5
+      Enum: 7
     - Name: Random
       Clips:
       - AudioClip: {fileID: 8300000, guid: 2a512f330f5b61840b2e3a99d437dbaf, type: 3}
         Volume: 1
       HasPitchVariation: 0
       PitchVariation: 0
-      Enum: 6
+      Enum: 8
     Enum: 1
     EditorColor: {r: 0.5147405, g: 0.5943396, b: 0.4457547, a: 1}
   - Name: Music
@@ -78,7 +92,7 @@ MonoBehaviour:
         Volume: 1
       HasPitchVariation: 0
       PitchVariation: 0.112
-      Enum: 7
+      Enum: 9
     Enum: 2
     EditorColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
   EnumsAssigned: 1

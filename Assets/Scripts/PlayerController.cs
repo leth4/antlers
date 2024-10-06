@@ -40,7 +40,7 @@ public class PlayerController : Singleton<PlayerController>
             if (!_wasInTallGrass)
             {
                 StopAllCoroutines();
-                StartCoroutine(WindVolumeRoutine(.65f));
+                StartCoroutine(WindVolumeRoutine(.4f));
             }
             _wasInTallGrass = true;
             movementSpeed *= .9f;

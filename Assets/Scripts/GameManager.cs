@@ -53,10 +53,10 @@ public class GameManager : Singleton<GameManager>
 
         _overlayText.text = "";
 
-        yield return new WaitForSeconds(.5f);
 
         if (!_haveSeenTutorial)
         {
+            yield return new WaitForSeconds(.5f);
             _overlayText.text = "HUMAN IN A WORLD OF MACHINES";
             yield return new WaitForSeconds(4f);
             _overlayText.text = "";
@@ -85,7 +85,7 @@ public class GameManager : Singleton<GameManager>
         else
         {
             _overlayText.text = "THE YEAR WAS LONG, BUT IT'S WINTER SOON";
-            yield return new WaitForSeconds(2);
+            yield return new WaitForSeconds(2f);
             _overlayText.text = "";
             yield return new WaitForSeconds(1);
         }
@@ -145,13 +145,10 @@ public class GameManager : Singleton<GameManager>
                 GenerateLevel();
             }
         }
-#if UNITY_EDITOR
         else if (Input.GetKeyDown(KeyCode.R))
         {
-            GenerateLevel();
-            // HandleNoDeersLeft();
+            SceneDirector.RestartScene();
         }
-#endif
 
         if (Input.GetKeyDown(KeyCode.K))
         {
@@ -216,6 +213,8 @@ public class GameManager : Singleton<GameManager>
         _overlay.SetActive(true);
         _overlayText.text = text + $"\nON NOVEMBER {24 + _currentLevel}.";
         yield return new WaitForSeconds(3);
+        _overlayText.text = "";
+        yield return new WaitForSeconds(.5f);
         _isEndingLevel = false;
         SceneDirector.RestartScene();
     }
@@ -232,7 +231,7 @@ public class GameManager : Singleton<GameManager>
         AudioManager.Instance.Play(SoundEnum.Death, 0, false);
         if (reason is DeathReason.Snake) StartCoroutine(DeathRoutine("YOU LOST YOUR LIFE TO A CARBON GRASS LURKER"));
         if (reason is DeathReason.Mine) StartCoroutine(DeathRoutine("YOU LOST YOUR LIFE TO AN ELECTRIC LANDMINE"));
-        if (reason is DeathReason.Hunter) StartCoroutine(DeathRoutine("YOU LOST YOUR LIFE TO AN OVERCHARGED DOUBLE-HEADED DOG"));
+        if (reason is DeathReason.Hunter) StartCoroutine(DeathRoutine("YOU LOST YOUR LIFE TO A SYNTHETIC DOUBLE-HEADED WOLF"));
         _currentLevel = 0;
     }
 

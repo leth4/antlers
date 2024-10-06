@@ -14,7 +14,9 @@ public enum SoundEnum
 	Death = 2,
 	Mine = 3,
 	Snake = 4,
-	Wind = 5,
-	Random = 6,
-	Ambient = 7,
+	Mule = 5,
+	MuleDie = 6,
+	Wind = 7,
+	Random = 8,
+	Ambient = 9,
 }

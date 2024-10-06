@@ -18,20 +18,16 @@ public class FaunaManager : Singleton<FaunaManager>
 
     private List<Creature> _creatures = new();
 
-    private float _deerLeft;
-
     public void GenerateCreatures()
     {
         _detectingEnding = false;
         _creatures.ForEach(creature => { if (creature != null) Destroy(creature.gameObject); });
         _creatures = new();
-        _deerLeft = 0;
 
         var haveMules = Random.Range(0, 1f) < .4f;
 
         for (int i = 0; i < Random.Range(3, 6); i++)
         {
-            _deerLeft++;
             _creatures.Add(Instantiate(_deerPrefab, GetRandomPositionInBounds(6), Quaternion.identity));
             _creatures[^1].Initialize();
         }
@@ -80,9 +76,9 @@ public class FaunaManager : Singleton<FaunaManager>
 
     private void HandleDeerDied()
     {
-        _deerLeft--;
         if (!_detectingEnding) return;
-        if (_deerLeft > 0) return;
+        if (FindObjectsOfType<DeerCreature>().Length > 1) return;
+
         OnNoDeersLeft?.Invoke();
         _detectingEnding = false;
     }

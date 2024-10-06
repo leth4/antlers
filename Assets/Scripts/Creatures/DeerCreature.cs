@@ -33,6 +33,8 @@ public class DeerCreature : Creature
 
     private void Update()
     {
+        if (!GridManager.Instance.IsInBounds(transform.position)) Die(.5f);
+
         if (_state is State.Dead)
         {
             _renderer.sprite = _deadSprite;
@@ -86,8 +88,6 @@ public class DeerCreature : Creature
 
         _renderer.sprite = Time.time % .2f > .1f ? _defaultSprite : _walkSprite;
         _renderer.flipX = transform.position.x < _currentPredatorTransform.position.x;
-
-        if (!GridManager.Instance.IsInBounds(transform.position)) Die(.5f);
     }
 
     private void HandleAlert()
