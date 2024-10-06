@@ -78,11 +78,10 @@ public class FaunaManager : Singleton<FaunaManager>
         return Vector3.zero;
     }
 
-    private void HandleCreatureDied(Creature deadCreature)
+    private void HandleDeerDied()
     {
-        if (deadCreature is DeerCreature) _deerLeft--;
+        _deerLeft--;
         if (!_detectingEnding) return;
-        Debug.Log(_deerLeft);
         if (_deerLeft > 0) return;
         OnNoDeersLeft?.Invoke();
         _detectingEnding = false;
@@ -90,11 +89,11 @@ public class FaunaManager : Singleton<FaunaManager>
 
     private void OnEnable()
     {
-        Creature.OnDied += HandleCreatureDied;
+        Creature.OnDied += HandleDeerDied;
     }
 
     private void OnDisable()
     {
-        Creature.OnDied += HandleCreatureDied;
+        Creature.OnDied += HandleDeerDied;
     }
 }

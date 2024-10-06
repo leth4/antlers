@@ -288,6 +288,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 687d838b67928b8469fac2ab7f4b407a, type: 3}
   - {fileID: 21300000, guid: ee4edc088a51d474c8d7e42bfbefedc1, type: 3}
   - {fileID: 21300000, guid: c16b9a15009c5df41b9812d4cce3d286, type: 3}
+  - {fileID: 21300000, guid: 263aaf77034e8d34c936576a243f35cf, type: 3}
   _gridSize: {x: 35, y: 15}
   _tilePrefab: {fileID: -1322881895209377192, guid: 83b7812cdb7557d4586758708b74b099, type: 3}
   _initialGrassChance: 0.85

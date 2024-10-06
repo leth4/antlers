@@ -87,14 +87,14 @@ public class MuleCreature : Creature
     {
         base.Die(0);
 
-        GridManager.Instance.TurnNeighborsInto(transform.position, TileType.TallGrass);
+        GridManager.Instance.TurnCircleNeighborsInto(transform.position, TileType.TallGrass);
     }
 
     private float GetSpeedModifier()
     {
         var tile = GridManager.Instance.GetTileAt(transform.position);
 
-        if (tile.Type != TileType.Normal || tile.Type != TileType.Mine)
+        if (tile.Type != TileType.Normal && tile.Type != TileType.Mine)
         {
             tile.SetType(TileType.Normal, 0);
         }

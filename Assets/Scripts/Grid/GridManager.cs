@@ -69,7 +69,17 @@ public class GridManager : Singleton<GridManager>
         return null;
     }
 
-    public void TurnNeighborsInto(Vector3 position, TileType tileType)
+    public void TurnNeighborsInto(Tile tile, TileType tileType)
+    {
+        var adjacent = GridHelper.GetAdjacent(_grid, tile, false);
+        foreach (var nearTile in adjacent)
+        {
+            if (nearTile.Type != TileType.Grass && nearTile.Type != TileType.TallGrass && nearTile.Type != TileType.Swamp) continue;
+            nearTile.SetType(tileType, 0);
+        }
+    }
+
+    public void TurnCircleNeighborsInto(Vector3 position, TileType tileType)
     {
         var nearestTile = new Vector2Int(Mathf.RoundToInt(position.x), Mathf.RoundToInt(position.y));
         if (!GridHelper.IsValidCoordinates(_grid, nearestTile)) return;
@@ -126,8 +136,24 @@ public class GridManager : Singleton<GridManager>
         GenerateGrass();
 
         GenerateJunk();
-
         GenerateMines();
+        // GenerateFire();
+    }
+
+    private void GenerateFire()
+    {
+        var count = Random.Range(0, 3);
+        for (int i = 0; i < count; i++)
+        {
+            _group++;
+            var coord = GetRandomCoord();
+            if (Vector3.Distance(new Vector3(coord.x, coord.y, 0), PlayerController.Instance.transform.position) < 3)
+            {
+                i--;
+                continue;
+            }
+            _grid[coord.x, coord.y].SetType(TileType.Fire, _group);
+        }
     }
 
     private void GenerateMines()
@@ -268,6 +294,7 @@ public class GridManager : Singleton<GridManager>
             TileType.Swamp => _sprites[4],
             TileType.Junk => _sprites[Random.Range(5, 8)],
             TileType.Mine => _sprites[8],
+            TileType.Fire => _sprites[9],
             _ => _sprites[0]
         };
     }

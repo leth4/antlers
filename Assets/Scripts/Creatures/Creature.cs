@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class Creature : MonoBehaviour
 {
-    public static event Action<Creature> OnDied;
+    public static event Action OnDied;
 
     [SerializeField] protected float Speed;
     [field: SerializeField] public float Strength { get; private set; }
@@ -16,6 +16,8 @@ public class Creature : MonoBehaviour
     [SerializeField] private Color _maxColor;
 
     private Collider2D[] _colliders = new Collider2D[8];
+
+    private bool _isDead;
 
     public void Initialize()
     {
@@ -83,12 +85,16 @@ public class Creature : MonoBehaviour
     {
         if (delay == 0)
         {
-            OnDied?.Invoke(this);
+            if (_isDead) return;
+            _isDead = true;
+            if (this is DeerCreature) OnDied?.Invoke();
             Destroy(gameObject);
         }
         else Tween.Delay(this, delay, () =>
         {
-            OnDied?.Invoke(this);
+            if (_isDead) return;
+            _isDead = true;
+            if (this is DeerCreature) OnDied?.Invoke();
             Destroy(gameObject);
         });
     }

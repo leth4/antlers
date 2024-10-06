@@ -137,7 +137,7 @@ public class HunterCreature : Creature
 
             if (_tileTarget != null) _tileTarget.IsTaken = true;
 
-            _renderer.sprite = _defaultSprite;
+            _renderer.sprite = _eatSprite;
         }
         if (_state is State.Idle)
         {
@@ -147,7 +147,7 @@ public class HunterCreature : Creature
 
             if (_tileTarget != null) _tileTarget.IsTaken = true;
 
-            _renderer.sprite = _eatSprite;
+            _renderer.sprite = _defaultSprite;
         }
         if (_state is State.Alert)
         {
