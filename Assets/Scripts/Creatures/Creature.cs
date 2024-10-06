@@ -6,10 +6,18 @@ using UnityEngine;
 public class Creature : MonoBehaviour
 {
     [SerializeField] protected float Speed;
-
     [field: SerializeField] public float Strength { get; private set; }
 
+    [SerializeField] private SpriteRenderer _spriteRenderer;
+    [SerializeField] private Color _minColor;
+    [SerializeField] private Color _maxColor;
+
     private Collider2D[] _colliders = new Collider2D[8];
+
+    public void Initialize()
+    {
+        _spriteRenderer.color = Color.Lerp(_minColor, _maxColor, Random.Range(0, 1f));
+    }
 
     protected Transform GetNearbyPredator(float radius)
     {
@@ -63,9 +71,9 @@ public class Creature : MonoBehaviour
         return null;
     }
 
-    public void Die()
+    public void Die(float delay = 0)
     {
-        Destroy(gameObject);
+        Destroy(gameObject, delay);
     }
 
     protected float GetStereoPan()

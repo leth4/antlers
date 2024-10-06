@@ -7,6 +7,7 @@ public class FaunaManager : Singleton<FaunaManager>
 {
     [SerializeField] private Creature _hunterPrefab;
     [SerializeField] private Creature _deerPrefab;
+    [SerializeField] private Creature _snakePrefab;
 
     private List<Creature> _creatures = new();
 
@@ -17,10 +18,19 @@ public class FaunaManager : Singleton<FaunaManager>
         for (int i = 0; i < Random.Range(3, 6); i++)
         {
             _creatures.Add(Instantiate(_deerPrefab, GetRandomPositionInBounds(), Quaternion.identity));
+            _creatures[^1].Initialize();
         }
         for (int i = 0; i < Random.Range(1, 2); i++)
         {
             _creatures.Add(Instantiate(_hunterPrefab, GetRandomPositionInBounds(), Quaternion.identity));
+            _creatures[^1].Initialize();
+        }
+        for (int i = 0; i < Random.Range(1, 2); i++)
+        {
+            var tile = GridManager.Instance.GetRandomTallGrass();
+            if (tile == null) break;
+            _creatures.Add(Instantiate(_snakePrefab, tile.transform.position.SetZ(0), Quaternion.identity));
+            _creatures[^1].Initialize();
         }
     }
 

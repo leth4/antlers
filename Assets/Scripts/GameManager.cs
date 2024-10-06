@@ -39,7 +39,7 @@ public class GameManager : Singleton<GameManager>
 
     private void UpdateHealthCounter()
     {
-        var counterWord = _healthLeft > 1 ? "NIGHTS" : "NIGHT";
+        var counterWord = _healthLeft != 1 ? "NIGHTS" : "NIGHT";
         _healthCounter.text = $"{_healthLeft.ToWord()} {counterWord} TO LIVE.";
     }
 
@@ -50,6 +50,9 @@ public class GameManager : Singleton<GameManager>
             RemoveHealth();
             GenerateLevel();
         }
+
+        if (Input.GetKeyDown(KeyCode.Escape)) Window.Close();
+        if (Input.GetKeyDown(KeyCode.F)) Window.ToggleFullScreen();
     }
 
     private void GenerateLevel()

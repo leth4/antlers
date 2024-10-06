@@ -249,6 +249,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _hunterPrefab: {fileID: 274787788070075984, guid: 37c62a9ba3ed2e74d9a83c79d3a16b63, type: 3}
   _deerPrefab: {fileID: 2437836697486607225, guid: 4bdae2b09ae329a47b1225d287d1792c, type: 3}
+  _snakePrefab: {fileID: 7546199494640601827, guid: 6640e891e9998ab4cb9f52f3374ca1d7, type: 3}
 --- !u!114 &194254348
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -287,8 +288,8 @@ MonoBehaviour:
   - {fileID: 21300000, guid: c16b9a15009c5df41b9812d4cce3d286, type: 3}
   _gridSize: {x: 35, y: 15}
   _tilePrefab: {fileID: -1322881895209377192, guid: 83b7812cdb7557d4586758708b74b099, type: 3}
-  _initialGrassChance: 0.8
-  _nextGrassChanceDelta: 0.12
+  _initialGrassChance: 0.85
+  _nextGrassChanceDelta: 0.11
   _minGrassChunks: 2
   _maxGrassChunks: 5
   _initialTallGrassChance: 1
@@ -335,8 +336,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -54.60479, y: -56}
-  m_SizeDelta: {x: 928.5624, y: 30}
+  m_AnchoredPosition: {x: 0.000013173, y: -48}
+  m_SizeDelta: {x: 816.6394, y: 30}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &244452812
 MonoBehaviour:
@@ -974,10 +975,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1000, y: 600}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
@@ -1020,8 +1021,8 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1568110608}
   - {fileID: 244452811}
+  - {fileID: 1568110608}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}

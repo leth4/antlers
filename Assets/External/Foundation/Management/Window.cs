@@ -25,8 +25,9 @@ namespace Foundation
             }
             else
             {
+                Screen.fullScreen = false;
                 Screen.fullScreenMode = FullScreenMode.Windowed;
-                Screen.SetResolution(960, 540, true);
+                Screen.SetResolution(1000, 600, true);
             }
         }
 

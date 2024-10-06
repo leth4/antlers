@@ -67,12 +67,18 @@ public class DeerCreature : Creature
 
     private void HandleRunning()
     {
+        if (_currentPredatorTransform == null)
+        {
+            SetState(State.Alert);
+            return;
+        }
+
         transform.position += (transform.position - _currentPredatorTransform.position).normalized * _runningSpeed * GetSpeedModifier() * Time.deltaTime;
 
         _renderer.sprite = Time.time % .2f > .1f ? _defaultSprite : _walkSprite;
         _renderer.flipX = transform.position.x < _currentPredatorTransform.position.x;
 
-        if (!GridManager.Instance.IsInBounds(transform.position)) Die();
+        if (!GridManager.Instance.IsInBounds(transform.position)) Die(.5f);
     }
 
     private void HandleAlert()
@@ -167,7 +173,8 @@ public class DeerCreature : Creature
         if (tile?.Type is TileType.TallGrass) return .8f;
         if (tile?.Type is TileType.Swamp) return .4f;
 
-        if (tile?.Type is TileType.Mine) {
+        if (tile?.Type is TileType.Mine)
+        {
             Die();
             tile.SetType(TileType.Normal, 0);
         }

@@ -38,6 +38,8 @@ public class GridManager : Singleton<GridManager>
     private Tile[,] _grid;
     private int _group;
 
+    private List<Tile> _tallGrass;
+
     public bool IsInBounds(Vector2 position)
     {
         if (position.x < 0 || position.y < 0 || position.x > _gridSize.x || position.y > _gridSize.y) return false;
@@ -60,6 +62,16 @@ public class GridManager : Singleton<GridManager>
             }
         }
 
+        return null;
+    }
+
+    public Tile GetRandomTallGrass()
+    {
+        _tallGrass.Shuffle();
+        for (int i = _tallGrass.Count - 1; i >= 0; i--)
+        {
+            if (_tallGrass[i].Type is TileType.TallGrass) return _tallGrass[i];
+        }
         return null;
     }
 
@@ -156,11 +168,16 @@ public class GridManager : Singleton<GridManager>
 
     private void GenerateTallGrass()
     {
+        _tallGrass = new();
         for (int i = 0; i < Random.Range(_minTallGrassChunks, _maxTallGrassChunks); i++)
         {
             _group++;
             var coord = GetRandomCoord();
-            ApplyToNeighborsRecursive(coord.x, coord.y, _initialTallGrassChance, _nextTallGrassChanceDelta, tile => tile.SetType(TileType.TallGrass, _group));
+            ApplyToNeighborsRecursive(coord.x, coord.y, _initialTallGrassChance, _nextTallGrassChanceDelta, tile =>
+            {
+                _tallGrass.Add(tile);
+                tile.SetType(TileType.TallGrass, _group);
+            });
         }
     }
 
