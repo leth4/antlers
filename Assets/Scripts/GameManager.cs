@@ -24,7 +24,9 @@ public class GameManager : Singleton<GameManager>
 
     private void Start()
     {
-        _haveSeenTutorial = true; // TEMP
+#if UNITY_EDITOR
+        _haveSeenTutorial = true;
+#endif
 
         StartCoroutine(GameIntroRoutine(() =>
         {
@@ -56,22 +58,27 @@ public class GameManager : Singleton<GameManager>
         if (!_haveSeenTutorial)
         {
             _overlayText.text = "HUMAN IN A WORLD OF MACHINES";
-            yield return new WaitForSeconds(3.5f);
+            yield return new WaitForSeconds(4f);
             _overlayText.text = "";
             yield return new WaitForSeconds(1);
 
             _overlayText.text = "THE YEAR WAS LONG, BUT IT'S WINTER SOON";
-            yield return new WaitForSeconds(3.5f);
+            yield return new WaitForSeconds(4f);
             _overlayText.text = "";
             yield return new WaitForSeconds(1);
 
             _overlayText.text = "MOVE WITH [WASD] or [↑←↓→]";
-            yield return new WaitForSeconds(3.5f);
+            yield return new WaitForSeconds(4f);
             _overlayText.text = "";
             yield return new WaitForSeconds(1);
 
-            _overlayText.text = "HUNT A DEER TO SURVIVE A NIGHT. BIOTECH IS AN AQUIRED TASTE";
-            yield return new WaitForSeconds(3.5f);
+            _overlayText.text = "HUNT A METAL DEER TO SURVIVE A NIGHT";
+            yield return new WaitForSeconds(4f);
+            _overlayText.text = "";
+            yield return new WaitForSeconds(1);
+
+            _overlayText.text = "BIOTECH IS AN AQUIRED TASTE";
+            yield return new WaitForSeconds(4f);
             _overlayText.text = "";
             yield return new WaitForSeconds(1);
         }
@@ -138,11 +145,13 @@ public class GameManager : Singleton<GameManager>
                 GenerateLevel();
             }
         }
+#if UNITY_EDITOR
         else if (Input.GetKeyDown(KeyCode.R))
         {
             GenerateLevel();
             // HandleNoDeersLeft();
         }
+#endif
 
         if (Input.GetKeyDown(KeyCode.K))
         {
@@ -170,7 +179,6 @@ public class GameManager : Singleton<GameManager>
         if (IsInfiniteMode) return;
         if (_isEndingLevel) return;
         _isEndingLevel = true;
-
         _currentLevel = 0;
         AudioManager.Instance.Play(SoundEnum.Death, 0, false);
         StartCoroutine(DeathRoutine("YOU LOST YOUR LIFE TO HUNGER"));
@@ -182,7 +190,7 @@ public class GameManager : Singleton<GameManager>
         if (_isEndingLevel) return;
         _isEndingLevel = true;
         _currentLevel++;
-        if (_currentLevel == 10) StartCoroutine(GameEndingRoutine());
+        if (_currentLevel == 7) StartCoroutine(GameEndingRoutine());
         else StartCoroutine(LevelChangeRoutine());
     }
 
@@ -192,8 +200,8 @@ public class GameManager : Singleton<GameManager>
         yield return new WaitForSeconds(.5f);
         UnloadEverything();
         _overlay.SetActive(true);
-        _overlayText.text = $"NOVEMBER {21 + _currentLevel}";
-        yield return new WaitForSeconds(1f);
+        _overlayText.text = $"NOVEMBER {24 + _currentLevel}";
+        yield return new WaitForSeconds(1.5f);
         _overlay.SetActive(false);
 
         GenerateLevel();
@@ -206,7 +214,7 @@ public class GameManager : Singleton<GameManager>
         UnloadEverything();
         _isEndingLevel = true;
         _overlay.SetActive(true);
-        _overlayText.text = text + $"\nON NOVEMBER {21 + _currentLevel}.";
+        _overlayText.text = text + $"\nON NOVEMBER {24 + _currentLevel}.";
         yield return new WaitForSeconds(3);
         _isEndingLevel = false;
         SceneDirector.RestartScene();
@@ -219,11 +227,13 @@ public class GameManager : Singleton<GameManager>
 
     public void HandlePlayerDeath(DeathReason reason)
     {
-        _currentLevel = 0;
+        if (IsInfiniteMode) return;
+        if (_isEndingLevel) return;
         AudioManager.Instance.Play(SoundEnum.Death, 0, false);
-        if (reason is DeathReason.Snake) StartCoroutine(DeathRoutine("YOU LOST YOUR LIFE TO A GRASS LURKER"));
+        if (reason is DeathReason.Snake) StartCoroutine(DeathRoutine("YOU LOST YOUR LIFE TO A CARBON GRASS LURKER"));
         if (reason is DeathReason.Mine) StartCoroutine(DeathRoutine("YOU LOST YOUR LIFE TO AN ELECTRIC LANDMINE"));
-        if (reason is DeathReason.Hunter) StartCoroutine(DeathRoutine("YOU LOST YOUR LIFE TO A DOUBLE-HEADED DOG"));
+        if (reason is DeathReason.Hunter) StartCoroutine(DeathRoutine("YOU LOST YOUR LIFE TO AN OVERCHARGED DOUBLE-HEADED DOG"));
+        _currentLevel = 0;
     }
 
     private void OnEnable()

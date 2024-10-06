@@ -27,7 +27,7 @@ public class FaunaManager : Singleton<FaunaManager>
         _creatures = new();
         _deerLeft = 0;
 
-        var haveMules = Random.Range(0, 1f) > .4f;
+        var haveMules = Random.Range(0, 1f) < .4f;
 
         for (int i = 0; i < Random.Range(3, 6); i++)
         {

@@ -32,7 +32,7 @@ MonoBehaviour:
     - Name: Death
       Clips:
       - AudioClip: {fileID: 8300000, guid: d16e672c6ee335e43ad68905fc7de766, type: 3}
-        Volume: 0.279
+        Volume: 0.294
       HasPitchVariation: 0
       PitchVariation: 0
       Enum: 2
@@ -46,7 +46,7 @@ MonoBehaviour:
     - Name: Snake
       Clips:
       - AudioClip: {fileID: 8300000, guid: 31027fc80affd0c4da34ecb88a9102bd, type: 3}
-        Volume: 0.49
+        Volume: 0.286
       HasPitchVariation: 0
       PitchVariation: 0
       Enum: 4
@@ -57,7 +57,7 @@ MonoBehaviour:
     - Name: Wind
       Clips:
       - AudioClip: {fileID: 8300000, guid: 28268d9deacf9e94a91f836830b881ae, type: 3}
-        Volume: 0.524
+        Volume: 0.713
       HasPitchVariation: 0
       PitchVariation: 0
       Enum: 5

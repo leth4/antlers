@@ -292,19 +292,19 @@ MonoBehaviour:
   _gridSize: {x: 35, y: 15}
   _tilePrefab: {fileID: -1322881895209377192, guid: 83b7812cdb7557d4586758708b74b099, type: 3}
   _initialGrassChance: 0.85
-  _nextGrassChanceDelta: 0.11
+  _nextGrassChanceDelta: 0.12
   _minGrassChunks: 2
-  _maxGrassChunks: 5
-  _initialTallGrassChance: 1
-  _nextTallGrassChanceDelta: 0.1
+  _maxGrassChunks: 4
+  _initialTallGrassChance: 0.9
+  _nextTallGrassChanceDelta: 0.12
   _minTallGrassChunks: 1
   _maxTallGrassChunks: 3
-  _initialSwampChance: 1
+  _initialSwampChance: 0.9
   _nextSwampChanceDelta: 0.1
-  _minSwampGrassChunks: 2
+  _minSwampGrassChunks: 1
   _maxSwampGrassChunks: 3
   _minMines: 0
-  _maxMines: 5
+  _maxMines: 4
 --- !u!1 &244452810
 GameObject:
   m_ObjectHideFlags: 0
@@ -2413,7 +2413,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.068964005, y: -0.014481306}
+  m_Offset: {x: 0.068964005, y: -0.06931853}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -2424,7 +2424,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.5862179, y: 0.7626195}
+  m_Size: {x: 0.5862179, y: 0.87229395}
   m_EdgeRadius: 0
 --- !u!50 &1847852644
 Rigidbody2D:
