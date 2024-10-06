@@ -30,12 +30,12 @@ public class GameManager : Singleton<GameManager>
 
         StartCoroutine(GameIntroRoutine(() =>
         {
+            StartCoroutine(RandomSoundRoutine(SoundEnum.Random, 15, 20));
             if (!AudioManager.Instance.IsPlaying(SoundEnum.Wind)) AudioManager.Instance.Play(SoundEnum.Wind, 0, true);
             GenerateLevel();
             PlayerController.Instance.IsActive = true;
         }));
 
-        StartCoroutine(RandomSoundRoutine(SoundEnum.Random, 5, 15));
     }
 
     private IEnumerator RandomSoundRoutine(SoundEnum sound, float minTime, float maxTime)
@@ -43,6 +43,7 @@ public class GameManager : Singleton<GameManager>
         while (true)
         {
             yield return new WaitForSeconds(UnityEngine.Random.Range(minTime, maxTime));
+            if (_currentLevel == 7) break;
             AudioManager.Instance.Play(sound);
         }
     }
@@ -52,7 +53,6 @@ public class GameManager : Singleton<GameManager>
         _overlay.SetActive(true);
 
         _overlayText.text = "";
-
 
         if (!_haveSeenTutorial)
         {
@@ -67,17 +67,17 @@ public class GameManager : Singleton<GameManager>
             _overlayText.text = "";
             yield return new WaitForSeconds(1);
 
-            _overlayText.text = "MOVE WITH [WASD] or [↑←↓→]";
-            yield return new WaitForSeconds(4f);
-            _overlayText.text = "";
-            yield return new WaitForSeconds(1);
-
             _overlayText.text = "HUNT A METAL DEER TO SURVIVE A NIGHT";
             yield return new WaitForSeconds(4f);
             _overlayText.text = "";
             yield return new WaitForSeconds(1);
 
             _overlayText.text = "BIOTECH IS AN AQUIRED TASTE";
+            yield return new WaitForSeconds(4f);
+            _overlayText.text = "";
+            yield return new WaitForSeconds(1);
+
+            _overlayText.text = "MOVE WITH [WASD] or [↑←↓→]";
             yield return new WaitForSeconds(4f);
             _overlayText.text = "";
             yield return new WaitForSeconds(1);
@@ -194,11 +194,15 @@ public class GameManager : Singleton<GameManager>
     private IEnumerator LevelChangeRoutine()
     {
         _isEndingLevel = true;
-        yield return new WaitForSeconds(.5f);
+        yield return new WaitForSeconds(.2f);
+        AudioManager.Instance.Play(SoundEnum.Win, 0, false);
+        yield return new WaitForSeconds(.3f);
         UnloadEverything();
         _overlay.SetActive(true);
         _overlayText.text = $"NOVEMBER {24 + _currentLevel}";
         yield return new WaitForSeconds(1.5f);
+        _overlayText.text = "";
+        yield return new WaitForSeconds(.5f);
         _overlay.SetActive(false);
 
         GenerateLevel();

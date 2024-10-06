@@ -26,7 +26,7 @@ public class FaunaManager : Singleton<FaunaManager>
 
         var haveMules = Random.Range(0, 1f) < .4f;
 
-        for (int i = 0; i < Random.Range(3, 6); i++)
+        for (int i = 0; i < Random.Range(3, 7); i++)
         {
             _creatures.Add(Instantiate(_deerPrefab, GetRandomPositionInBounds(6), Quaternion.identity));
             _creatures[^1].Initialize();

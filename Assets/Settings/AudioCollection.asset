@@ -18,52 +18,87 @@ MonoBehaviour:
     - Name: HunterSearch
       Clips:
       - AudioClip: {fileID: 8300000, guid: a1bfa09451f4342449ced83e266e1569, type: 3}
-        Volume: 1
+        Volume: 0.711
       HasPitchVariation: 0
       PitchVariation: 0
       Enum: 0
     - Name: HunterFind
       Clips:
       - AudioClip: {fileID: 8300000, guid: c11c3d4acb421844e91c70d74c07d136, type: 3}
-        Volume: 1
+        Volume: 0.706
       HasPitchVariation: 0
       PitchVariation: 0
       Enum: 1
     - Name: Death
       Clips:
       - AudioClip: {fileID: 8300000, guid: d16e672c6ee335e43ad68905fc7de766, type: 3}
-        Volume: 0.294
+        Volume: 0.313
       HasPitchVariation: 0
       PitchVariation: 0
       Enum: 2
     - Name: Mine
       Clips:
       - AudioClip: {fileID: 8300000, guid: fe271bb8140e6c84d94248359b92f795, type: 3}
-        Volume: 0.168
+        Volume: 0.315
       HasPitchVariation: 0
       PitchVariation: 0
       Enum: 3
     - Name: Snake
       Clips:
       - AudioClip: {fileID: 8300000, guid: 31027fc80affd0c4da34ecb88a9102bd, type: 3}
-        Volume: 0.286
+        Volume: 0.431
       HasPitchVariation: 0
       PitchVariation: 0
       Enum: 4
     - Name: Mule
       Clips:
       - AudioClip: {fileID: 8300000, guid: 956b16f0d5d05fd45858b8dee78b3226, type: 3}
-        Volume: 0.629
+        Volume: 0.411
       HasPitchVariation: 0
       PitchVariation: 0
       Enum: 5
     - Name: MuleDie
       Clips:
       - AudioClip: {fileID: 8300000, guid: 0e510404a1296274f94b58d6ed01dbcb, type: 3}
-        Volume: 0.559
+        Volume: 0.371
       HasPitchVariation: 0
       PitchVariation: 0
       Enum: 6
+    - Name: Win
+      Clips:
+      - AudioClip: {fileID: 8300000, guid: c60017ce0d4e51e4aac5eff98a9495d9, type: 3}
+        Volume: 0
+      HasPitchVariation: 0
+      PitchVariation: 0
+      Enum: 7
+    - Name: DeerIdle
+      Clips:
+      - AudioClip: {fileID: 8300000, guid: 7bf115e6389ce4a4b9f0151f20c8102a, type: 3}
+        Volume: 0.916
+      HasPitchVariation: 0
+      PitchVariation: 0
+      Enum: 8
+    - Name: DeerWalk
+      Clips:
+      - AudioClip: {fileID: 8300000, guid: 6e6d23c17eda9054191bc6817e62e424, type: 3}
+        Volume: 0.923
+      HasPitchVariation: 0
+      PitchVariation: 0
+      Enum: 9
+    - Name: DeerAlert
+      Clips:
+      - AudioClip: {fileID: 8300000, guid: a3413ad1798d9bb4fa01111e70e8d8f7, type: 3}
+        Volume: 0.93
+      HasPitchVariation: 0
+      PitchVariation: 0
+      Enum: 10
+    - Name: DeerDeath
+      Clips:
+      - AudioClip: {fileID: 8300000, guid: 026790c803ff6114691ac5971f25a247, type: 3}
+        Volume: 0.972
+      HasPitchVariation: 0
+      PitchVariation: 0
+      Enum: 11
     Enum: 0
     EditorColor: {r: 0.6226415, g: 0.496351, b: 0.496351, a: 1}
   - Name: Ambient
@@ -71,17 +106,17 @@ MonoBehaviour:
     - Name: Wind
       Clips:
       - AudioClip: {fileID: 8300000, guid: 28268d9deacf9e94a91f836830b881ae, type: 3}
-        Volume: 0.713
+        Volume: 0.832
       HasPitchVariation: 0
       PitchVariation: 0
-      Enum: 7
+      Enum: 12
     - Name: Random
       Clips:
       - AudioClip: {fileID: 8300000, guid: 2a512f330f5b61840b2e3a99d437dbaf, type: 3}
         Volume: 1
       HasPitchVariation: 0
       PitchVariation: 0
-      Enum: 8
+      Enum: 13
     Enum: 1
     EditorColor: {r: 0.5147405, g: 0.5943396, b: 0.4457547, a: 1}
   - Name: Music
@@ -92,7 +127,7 @@ MonoBehaviour:
         Volume: 1
       HasPitchVariation: 0
       PitchVariation: 0.112
-      Enum: 9
+      Enum: 14
     Enum: 2
     EditorColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
   EnumsAssigned: 1

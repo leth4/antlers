@@ -100,6 +100,7 @@ public class DeerCreature : Creature
     {
         if (_currentTimer <= 0)
         {
+            if (Random.Range(0, 1f) < .7f) PlaySound(SoundEnum.DeerWalk);
             _currentTarget.SetType(TileType.Normal, 0);
             SetState(State.Searching);
         }
@@ -145,6 +146,7 @@ public class DeerCreature : Creature
         }
         if (_state is State.Idle)
         {
+            if (Random.Range(0, 1f) < .4f) PlaySound(SoundEnum.DeerIdle);
             _renderer.sprite = _defaultSprite;
 
             _currentTimer = Random.Range(1, 2);
@@ -161,6 +163,7 @@ public class DeerCreature : Creature
         }
         else if (_state is State.Alert)
         {
+            PlaySound(SoundEnum.DeerAlert);
             _renderer.sprite = _defaultSprite;
             _currentTimer = _alertTime;
         }
@@ -172,6 +175,12 @@ public class DeerCreature : Creature
         {
             _renderer.sprite = _deadSprite;
         }
+    }
+
+    public override void Die(float delay = 0)
+    {
+        if (delay == 0) PlaySound(SoundEnum.DeerDeath);
+        base.Die(delay);
     }
 
     private bool IsAtTarget()
@@ -189,6 +198,7 @@ public class DeerCreature : Creature
         if (tile?.Type is TileType.Mine)
         {
             PlaySound(SoundEnum.Mine);
+            PlaySound(SoundEnum.DeerDeath);
             SetState(State.Dead);
             tile.SetType(TileType.Normal, 0);
         }
