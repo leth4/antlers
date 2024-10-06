@@ -85,9 +85,7 @@ public class GameManager : Singleton<GameManager>
         else
         {
             _overlayText.text = "THE YEAR WAS LONG, BUT IT'S WINTER SOON";
-            yield return new WaitForSeconds(2f);
-            _overlayText.text = "";
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(2.2f);
         }
 
         _overlay.SetActive(false);

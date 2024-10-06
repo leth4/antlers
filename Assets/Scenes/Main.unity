@@ -295,13 +295,13 @@ MonoBehaviour:
   _nextGrassChanceDelta: 0.12
   _minGrassChunks: 2
   _maxGrassChunks: 4
-  _initialTallGrassChance: 1
+  _initialTallGrassChance: 0.85
   _nextTallGrassChanceDelta: 0.11
   _minTallGrassChunks: 2
   _maxTallGrassChunks: 3
   _initialSwampChance: 0.9
-  _nextSwampChanceDelta: 0.1
-  _minSwampGrassChunks: 2
+  _nextSwampChanceDelta: 0.11
+  _minSwampGrassChunks: 1
   _maxSwampGrassChunks: 3
   _minMines: 1
   _maxMines: 4

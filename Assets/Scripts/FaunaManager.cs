@@ -25,17 +25,18 @@ public class FaunaManager : Singleton<FaunaManager>
         _creatures = new();
 
         var haveMules = Random.Range(0, 1f) < .4f;
+        var haveHunter = Random.Range(0, 1f) < .7f;
 
         for (int i = 0; i < Random.Range(3, 7); i++)
         {
             _creatures.Add(Instantiate(_deerPrefab, GetRandomPositionInBounds(6), Quaternion.identity));
             _creatures[^1].Initialize();
         }
-        for (int i = 0; i < Random.Range(0, 2); i++)
-        {
-            _creatures.Add(Instantiate(_hunterPrefab, GetRandomPositionInBounds(7), Quaternion.identity));
-            _creatures[^1].Initialize();
-        }
+        if (haveHunter) for (int i = 0; i < 1; i++)
+            {
+                _creatures.Add(Instantiate(_hunterPrefab, GetRandomPositionInBounds(7), Quaternion.identity));
+                _creatures[^1].Initialize();
+            }
         if (haveMules) for (int i = 0; i < 1; i++)
             {
                 _creatures.Add(Instantiate(_mulePrefab, GetRandomPositionInBounds(6), Quaternion.identity));
