@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Foundation;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : Singleton<GameManager>
@@ -13,48 +14,68 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private Text _overlayText;
     [SerializeField] private Text _healthCounter;
 
+    private static bool _haveSeenTutorial;
+
+    private float _newLevelAutoTimeLeft;
+
     private bool _isEndingLevel;
+
+    private int _currentLevel = 0;
 
     private void Start()
     {
-        UpdateHealthCounter();
-        // StartCoroutine(GameIntroRoutine(() =>
-        // {
-        AudioManager.Instance.Play(SoundEnum.Wind, 0, true);
-        GenerateLevel();
-        PlayerController.Instance.IsActive = true;
-        // }));
+        StartCoroutine(GameIntroRoutine(() =>
+        {
+            if (!AudioManager.Instance.IsPlaying(SoundEnum.Wind)) AudioManager.Instance.Play(SoundEnum.Wind, 0, true);
+            GenerateLevel();
+            PlayerController.Instance.IsActive = true;
+        }));
     }
 
     private IEnumerator GameIntroRoutine(Action onFinished)
     {
         _overlay.SetActive(true);
 
+        _overlayText.text = "";
+
         yield return new WaitForSeconds(.5f);
 
-        _overlayText.text = "A HUMAN IN THE WORLD OF MACHINES";
-        yield return new WaitForSeconds(2);
-        _overlayText.text = "";
-        yield return new WaitForSeconds(1);
+        if (!_haveSeenTutorial)
+        {
+            _overlayText.text = "A HUMAN IN THE WORLD OF MACHINES";
+            yield return new WaitForSeconds(2);
+            _overlayText.text = "";
+            yield return new WaitForSeconds(1);
 
-        _overlayText.text = "THERE'S 15 DAYS LEFT UNTIL WINTER";
-        yield return new WaitForSeconds(2);
-        _overlayText.text = "";
-        yield return new WaitForSeconds(1);
+            _overlayText.text = "THE YEAR WAS LONG, BUT THE WINTER IS SOON";
+            yield return new WaitForSeconds(2);
+            _overlayText.text = "";
+            yield return new WaitForSeconds(1);
 
-        _overlayText.text = "MOVE WITH [WASD] or [↑←↓→]";
-        yield return new WaitForSeconds(2);
-        _overlayText.text = "";
-        yield return new WaitForSeconds(1);
+            _overlayText.text = "MOVE WITH [WASD] or [↑←↓→]";
+            yield return new WaitForSeconds(2);
+            _overlayText.text = "";
+            yield return new WaitForSeconds(1);
+        }
+        else
+        {
+            _overlayText.text = "THE YEAR WAS LONG, BUT THE WINTER IS SOON";
+            yield return new WaitForSeconds(2);
+            _overlayText.text = "";
+            yield return new WaitForSeconds(1);
+        }
 
         _overlay.SetActive(false);
+
+        _haveSeenTutorial = true;
 
         onFinished?.Invoke();
     }
 
-    private IEnumerator GameEndingRoutine(Action onFinished)
+    private IEnumerator GameEndingRoutine()
     {
         _overlay.SetActive(true);
+        _overlayText.text = "";
 
         yield return new WaitForSeconds(.5f);
 
@@ -68,29 +89,45 @@ public class GameManager : Singleton<GameManager>
         _overlayText.text = "";
         yield return new WaitForSeconds(1);
 
-        _overlay.SetActive(false);
+        _overlayText.text = "THANK YOU FOR PLAYING";
+        yield return new WaitForSeconds(2);
+        _overlayText.text = "";
+        yield return new WaitForSeconds(1);
 
-        onFinished?.Invoke();
-    }
+        _overlayText.text = "PRESS [K] FOR IDLE MODE, THEN [R] TO SWITCH";
+        yield return new WaitForSeconds(2);
+        _overlayText.text = "";
+        yield return new WaitForSeconds(1);
 
-    private void UpdateHealthCounter()
-    {
-        _healthCounter.text = "";
-        // var counterWord = _healthLeft != 1 ? "NIGHTS" : "NIGHT";
-        // _healthCounter.text = $"{_healthLeft.ToWord()} {counterWord} TO LIVE.";
+        SceneDirector.RestartScene();
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R))
+        if (IsInfiniteMode)
         {
-            GenerateLevel();
+            _newLevelAutoTimeLeft -= Time.deltaTime;
+            if (_newLevelAutoTimeLeft <= 0 || Input.GetKeyDown(KeyCode.R))
+            {
+                _newLevelAutoTimeLeft = 25;
+                GenerateLevel();
+            }
+        }
+
+        else if (Input.GetKeyDown(KeyCode.R))
+        {
+            // GenerateLevel();
+            HandleNoDeersLeft();
         }
 
         if (Input.GetKeyDown(KeyCode.K))
         {
             IsInfiniteMode = !IsInfiniteMode;
-            if (IsInfiniteMode) PlayerController.Instance.transform.position = new Vector3(1000, 1000, 0);
+            if (IsInfiniteMode)
+            {
+                PlayerController.Instance.transform.position = new Vector3(1000, 1000, 0);
+            }
+            else SceneDirector.RestartScene();
         }
 
         if (Input.GetKeyDown(KeyCode.Escape)) Window.Close();
@@ -105,17 +142,21 @@ public class GameManager : Singleton<GameManager>
 
     private void HandleNoDeersLeft()
     {
+        if (IsInfiniteMode) return;
         if (_isEndingLevel) return;
-        StartCoroutine(LevelChangeRoutine());
+        _isEndingLevel = true;
+        _currentLevel++;
+        if (_currentLevel == 10) StartCoroutine(GameEndingRoutine());
+        else StartCoroutine(LevelChangeRoutine());
     }
 
-    private IEnumerator LevelChangeRoutine(string text = "", float delay = 1f)
+    private IEnumerator LevelChangeRoutine()
     {
         _isEndingLevel = true;
-        yield return new WaitForSeconds(delay);
+        yield return new WaitForSeconds(.5f);
         _overlay.SetActive(true);
-        _overlayText.text = text;
-        yield return new WaitForSeconds(text == "" ? 1f : 2.5f);
+        _overlayText.text = $"NOVEMBER {21 + _currentLevel}";
+        yield return new WaitForSeconds(1f);
         _overlay.SetActive(false);
 
         GenerateLevel();
@@ -123,12 +164,23 @@ public class GameManager : Singleton<GameManager>
         _isEndingLevel = false;
     }
 
+    private IEnumerator DeathRoutine(string text)
+    {
+        _isEndingLevel = true;
+        _overlay.SetActive(true);
+        _overlayText.text = text + $"\n...ON NOVEMBER {21 + _currentLevel}.";
+        yield return new WaitForSeconds(3);
+        _isEndingLevel = false;
+        SceneDirector.RestartScene();
+    }
+
     public void HandlePlayerDeath(DeathReason reason)
     {
+        _currentLevel = 0;
         AudioManager.Instance.Play(SoundEnum.Death, 0, false);
-        if (reason is DeathReason.Snake) StartCoroutine(LevelChangeRoutine("YOU LOST YOUR LIFE TO A GRASS LURKER.", 0));
-        if (reason is DeathReason.Mine) StartCoroutine(LevelChangeRoutine("YOU LOST YOUR LIFE TO AN ELECTRIC LANDMINE.", 0));
-        if (reason is DeathReason.Hunter) StartCoroutine(LevelChangeRoutine("YOU LOST YOUR LIFE TO A DOUBLE-HEADED DOG.", 0));
+        if (reason is DeathReason.Snake) StartCoroutine(DeathRoutine("YOU LOST YOUR LIFE TO A GRASS LURKER"));
+        if (reason is DeathReason.Mine) StartCoroutine(DeathRoutine("YOU LOST YOUR LIFE TO AN ELECTRIC LANDMINE"));
+        if (reason is DeathReason.Hunter) StartCoroutine(DeathRoutine("YOU LOST YOUR LIFE TO A DOUBLE-HEADED DOG"));
     }
 
     private void OnEnable()

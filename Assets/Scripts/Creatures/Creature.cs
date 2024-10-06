@@ -95,6 +95,8 @@ public class Creature : MonoBehaviour
 
     private float GetStereoPan()
     {
+        if (GameManager.Instance.IsInfiniteMode) return 0;
+
         var pan = (transform.position.x - PlayerController.Instance.transform.position.x) / 5;
 
         if (pan < -1) pan = -.5f;
@@ -105,6 +107,7 @@ public class Creature : MonoBehaviour
 
     private float GetVolume()
     {
+        if (GameManager.Instance.IsInfiniteMode) return 1;
         return 1 - Mathf.Clamp(Vector3.Distance(PlayerController.Instance.transform.position, transform.position) / 15, 0, .8f);
     }
 }

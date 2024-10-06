@@ -113,6 +113,11 @@ public class HunterCreature : Creature
             if (_tileTarget != null) _tileTarget.IsTaken = false;
 
             _tileTarget = GetRandomTarget(Random.Range(2, 4));
+            if (_tileTarget == null)
+            {
+                Die();
+                return;
+            }
 
             _tileTarget.IsTaken = true;
 

@@ -33,5 +33,23 @@ namespace Foundation
                 _ => "MANY"
             };
         }
+
+        public static string GetEnd(this int number)
+        {
+            return number switch
+            {
+                0 => "TH",
+                1 => "ST",
+                2 => "ND",
+                3 => "RD",
+                4 => "TH",
+                5 => "TH",
+                6 => "TH",
+                7 => "TH",
+                8 => "TH",
+                9 => "TH",
+                _ => "TH"
+            };
+        }
     }
 }

@@ -13,10 +13,6 @@ MonoBehaviour:
   m_Name: AudioCollection
   m_EditorClassIdentifier: 
   Channels:
-  - Name: Music
-    Sounds: []
-    Enum: 0
-    EditorColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
   - Name: SFX
     Sounds:
     - Name: HunterSearch
@@ -43,12 +39,12 @@ MonoBehaviour:
     - Name: Death
       Clips:
       - AudioClip: {fileID: 8300000, guid: d16e672c6ee335e43ad68905fc7de766, type: 3}
-        Volume: 1
+        Volume: 0.559
       HasPitchVariation: 0
       PitchVariation: 0
       Enum: 3
     Enum: 1
-    EditorColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+    EditorColor: {r: 0.6226415, g: 0.496351, b: 0.496351, a: 1}
   - Name: Ambient
     Sounds:
     - Name: Wind
@@ -66,5 +62,5 @@ MonoBehaviour:
       PitchVariation: 0
       Enum: 5
     Enum: 2
-    EditorColor: {r: 0.6367924, g: 0.6367924, b: 1, a: 1}
+    EditorColor: {r: 0.5147405, g: 0.5943396, b: 0.4457547, a: 1}
   EnumsAssigned: 1

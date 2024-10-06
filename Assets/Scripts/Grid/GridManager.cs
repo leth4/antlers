@@ -53,9 +53,12 @@ public class GridManager : Singleton<GridManager>
 
         var adjacentCoords = GridHelper.GetAdjacentCoordinates(_grid, nearestTile.x, nearestTile.y, true);
 
+        adjacentCoords.Shuffle();
+
         foreach (var coords in adjacentCoords)
         {
             var nextAdjacent = GridHelper.GetAdjacent(_grid, coords.x, coords.y, true);
+            nextAdjacent.Shuffle();
             foreach (var tile in nextAdjacent)
             {
                 if (tile == _grid[nearestTile.x, nearestTile.y]) continue;
@@ -114,6 +117,11 @@ public class GridManager : Singleton<GridManager>
         {
             _group++;
             var coord = GetRandomCoord();
+            if (Vector3.Distance(new Vector3(coord.x, coord.y, 0), PlayerController.Instance.transform.position) < 3)
+            {
+                i--;
+                continue;
+            }
             _grid[coord.x, coord.y].SetType(TileType.Mine, _group);
             var adjacent = GridHelper.GetAdjacent(_grid, _grid[coord.x, coord.y], true);
             adjacent.Shuffle();

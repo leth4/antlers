@@ -373,7 +373,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: THREE NIGHTS TO LIVE
+  m_Text: "\u2014"
 --- !u!222 &244452813
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -779,7 +779,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 17.5, y: 7.5, z: -10}
+  m_LocalPosition: {x: 17, y: 7, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -799,7 +799,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_AssetsPPU: 8
   m_RefResolutionX: 320
-  m_RefResolutionY: 180
+  m_RefResolutionY: 140
   m_UpscaleRT: 1
   m_PixelSnapping: 1
   m_CropFrameX: 0
@@ -1081,7 +1081,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.047058824, g: 0.047058824, b: 0.047058824, a: 1}
+  m_Color: {r: 0.050980393, g: 0.050980393, b: 0.050980393, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2164,7 +2164,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1568110608
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2378,6 +2378,7 @@ MonoBehaviour:
   _defaultSprite: {fileID: 21300000, guid: 8e637b1b52e41244c84b83f8327f6421, type: 3}
   _walkSprite: {fileID: 21300000, guid: a10a1b5730e672b40a4f038f2d1dda78, type: 3}
   IsActive: 0
+  IsVisible: 0
 --- !u!61 &1847852643
 BoxCollider2D:
   m_ObjectHideFlags: 0
