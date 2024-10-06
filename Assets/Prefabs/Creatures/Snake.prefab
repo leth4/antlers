@@ -102,11 +102,11 @@ MonoBehaviour:
   Speed: 2
   <Strength>k__BackingField: 100
   _spriteRenderer: {fileID: 8955892204846101490}
-  _minColor: {r: 0.33962262, g: 0.28647414, b: 0.26432893, a: 1}
-  _maxColor: {r: 0.26729563, g: 0.2830189, b: 0.21226417, a: 1}
+  _minColor: {r: 0.4245283, g: 0.3670568, b: 0.34242612, a: 1}
+  _maxColor: {r: 0.35955858, g: 0.3773585, b: 0.29725882, a: 1}
   _alertRadius: 3
   _alertTime: 5
-  _runningSpeed: 8
+  _runningSpeed: 7
   _followDistance: 7
   _renderer: {fileID: 8955892204846101490}
   _defaultSprite: {fileID: 21300000, guid: cde12357178244f418b9c24ea3d635d8, type: 3}

@@ -20,12 +20,12 @@ public class FaunaManager : Singleton<FaunaManager>
             _creatures.Add(Instantiate(_deerPrefab, GetRandomPositionInBounds(), Quaternion.identity));
             _creatures[^1].Initialize();
         }
-        for (int i = 0; i < Random.Range(1, 2); i++)
+        for (int i = 0; i < Random.Range(0, 2); i++)
         {
             _creatures.Add(Instantiate(_hunterPrefab, GetRandomPositionInBounds(), Quaternion.identity));
             _creatures[^1].Initialize();
         }
-        for (int i = 0; i < Random.Range(1, 2); i++)
+        for (int i = 0; i < Random.Range(0, 3); i++)
         {
             var tile = GridManager.Instance.GetRandomTallGrass();
             if (tile == null) break;

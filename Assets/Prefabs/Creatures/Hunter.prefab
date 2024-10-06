@@ -102,8 +102,8 @@ MonoBehaviour:
   Speed: 1.5
   <Strength>k__BackingField: 5
   _spriteRenderer: {fileID: 4595994685401123349}
-  _minColor: {r: 0.6509804, g: 0.6509804, b: 0.6509804, a: 1}
-  _maxColor: {r: 0.6981132, g: 0.6289605, b: 0.6289605, a: 1}
+  _minColor: {r: 0.4339623, g: 0.41553935, b: 0.41553935, a: 1}
+  _maxColor: {r: 0.5566038, g: 0.48571557, b: 0.48571557, a: 1}
   _searchDistance: 5
   _followDistance: 6
   _alertTime: 0.3

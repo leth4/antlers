@@ -12,6 +12,10 @@ public class PlayerController : Singleton<PlayerController>
     [SerializeField] private LayerMask _obstaclesMask;
     [SerializeField] private float _strength;
 
+    [SerializeField] private SpriteRenderer _renderer;
+    [SerializeField] private Sprite _defaultSprite;
+    [SerializeField] private Sprite _walkSprite;
+
     private Collider2D[] _colliders = new Collider2D[8];
 
     public bool IsActive;
@@ -40,8 +44,14 @@ public class PlayerController : Singleton<PlayerController>
             tile.SetType(TileType.Normal, 0);
         }
 
-
         var movement = new Vector2(horizontalMovement, verticalMovement);
+
+        if (horizontalMovement != 0 || verticalMovement != 0)
+        {
+            _renderer.sprite = Time.time % .4f > .2f ? _defaultSprite : _walkSprite;
+            _renderer.flipX = horizontalMovement < 0;
+        }
+        else _renderer.sprite = _defaultSprite;
 
         if (!OverlapsAt(transform.position + new Vector2(horizontalMovement, verticalMovement).normalized.ToVector3() * movementSpeed * Time.deltaTime))
         {
