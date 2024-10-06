@@ -99,15 +99,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44c11b4f92a8b70468a04489fffd7cd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 1.5
+  Speed: 2
   <Strength>k__BackingField: 5
   _spriteRenderer: {fileID: 4595994685401123349}
   _minColor: {r: 0.4339623, g: 0.41553935, b: 0.41553935, a: 1}
   _maxColor: {r: 0.5566038, g: 0.48571557, b: 0.48571557, a: 1}
-  _searchDistance: 5
+  _searchDistance: 4.5
   _followDistance: 6
   _alertTime: 0.3
-  _runningSpeed: 9
+  _runningSpeed: 8
   _renderer: {fileID: 4595994685401123349}
   _defaultSprite: {fileID: 21300000, guid: 7634c57c091a4f54391b1a2bb84f37a9, type: 3}
   _walkSprite: {fileID: 21300000, guid: 2153e083b01b351469c95b454524525c, type: 3}

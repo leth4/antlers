@@ -127,7 +127,7 @@ public class HunterCreature : Creature
         }
         if (_state is State.Idle)
         {
-            _currentTimer = Random.Range(.5f, 1f);
+            _currentTimer = Random.Range(2f, 2.5f);
 
             PlaySound(SoundEnum.HunterSearch);
 

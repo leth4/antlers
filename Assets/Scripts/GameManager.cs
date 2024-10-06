@@ -24,12 +24,12 @@ public class GameManager : Singleton<GameManager>
 
     private void Start()
     {
-        StartCoroutine(GameIntroRoutine(() =>
-        {
-            if (!AudioManager.Instance.IsPlaying(SoundEnum.Wind)) AudioManager.Instance.Play(SoundEnum.Wind, 0, true);
-            GenerateLevel();
-            PlayerController.Instance.IsActive = true;
-        }));
+        // StartCoroutine(GameIntroRoutine(() =>
+        // {
+        if (!AudioManager.Instance.IsPlaying(SoundEnum.Wind)) AudioManager.Instance.Play(SoundEnum.Wind, 0, true);
+        GenerateLevel();
+        PlayerController.Instance.IsActive = true;
+        // }));
     }
 
     private IEnumerator GameIntroRoutine(Action onFinished)
@@ -42,7 +42,7 @@ public class GameManager : Singleton<GameManager>
 
         if (!_haveSeenTutorial)
         {
-            _overlayText.text = "A HUMAN IN THE WORLD OF MACHINES";
+            _overlayText.text = "HUMAN IN A WORLD OF MACHINES";
             yield return new WaitForSeconds(2);
             _overlayText.text = "";
             yield return new WaitForSeconds(1);
@@ -77,27 +77,34 @@ public class GameManager : Singleton<GameManager>
         _overlay.SetActive(true);
         _overlayText.text = "";
 
-        yield return new WaitForSeconds(.5f);
+        Time.timeScale = 0;
+
+        AudioManager.Instance.Stop(SoundEnum.Wind, 3);
+        yield return new WaitForSecondsRealtime(4);
+
+        AudioManager.Instance.Play(SoundEnum.Ambient, 5);
+
+        yield return new WaitForSecondsRealtime(.5f);
 
         _overlayText.text = "YOU SURVIVED ANOTHER FALL";
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSecondsRealtime(4);
         _overlayText.text = "";
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSecondsRealtime(1);
 
         _overlayText.text = "MACHINES WILL HYBERNATE NOW";
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSecondsRealtime(4);
         _overlayText.text = "";
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSecondsRealtime(1);
 
         _overlayText.text = "THANK YOU FOR PLAYING";
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSecondsRealtime(4);
         _overlayText.text = "";
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSecondsRealtime(1);
 
         _overlayText.text = "PRESS [K] FOR IDLE MODE, THEN [R] TO SWITCH";
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSecondsRealtime(4);
         _overlayText.text = "";
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSecondsRealtime(10);
 
         SceneDirector.RestartScene();
     }
@@ -146,7 +153,8 @@ public class GameManager : Singleton<GameManager>
         if (_isEndingLevel) return;
         _isEndingLevel = true;
         _currentLevel++;
-        if (_currentLevel == 10) StartCoroutine(GameEndingRoutine());
+        // if (_currentLevel == 10) StartCoroutine(GameEndingRoutine());
+        if (_currentLevel == 2) StartCoroutine(GameEndingRoutine());
         else StartCoroutine(LevelChangeRoutine());
     }
 

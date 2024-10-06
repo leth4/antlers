@@ -1,9 +1,9 @@
 public enum ChannelEnum
 {
 	None = -1,
-	Music = 0,
-	SFX = 1,
-	Ambient = 2,
+	SFX = 0,
+	Ambient = 1,
+	Music = 2,
 }
 
 public enum SoundEnum
@@ -11,8 +11,7 @@ public enum SoundEnum
 	None = -1,
 	HunterSearch = 0,
 	HunterFind = 1,
-	PreyScream = 2,
-	Death = 3,
-	Wind = 4,
-	Ambient = 5,
+	Death = 2,
+	Wind = 3,
+	Ambient = 4,
 }

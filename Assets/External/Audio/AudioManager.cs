@@ -67,6 +67,11 @@ public class AudioManager : MonoBehaviour
         UpdateVolumes();
     }
 
+    public float GetChannelVolume(ChannelEnum channelEnum)
+    {
+        return ChannelVolumeDictionary[channelEnum];
+    }
+
     public void SetMasterVolume(float volume)
     {
         MasterVolume = volume;
@@ -210,7 +215,7 @@ public class AudioManager : MonoBehaviour
         {
             var volumeCoefficent = (action == AudioAction.Stop) ? 1 - time / fadeTime : time / fadeTime;
             source.volume = initialVolume * volumeCoefficent;
-            time += Time.deltaTime;
+            time += Time.unscaledDeltaTime;
             yield return null;
         }
 
@@ -220,7 +225,7 @@ public class AudioManager : MonoBehaviour
         }
         else
         {
-            yield return new WaitForSeconds(clip.AudioClip.length - fadeTime);
+            yield return new WaitForSecondsRealtime(clip.AudioClip.length - fadeTime);
         }
 
         if (!loops) _jobDictionary[source] = null;

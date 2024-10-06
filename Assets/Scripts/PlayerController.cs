@@ -19,6 +19,8 @@ public class PlayerController : Singleton<PlayerController>
     public bool IsActive;
     public bool IsVisible;
 
+    private bool _wasInTallGrass;
+
     private void Update()
     {
         if (!IsActive) return;
@@ -34,7 +36,22 @@ public class PlayerController : Singleton<PlayerController>
 
         var tile = GridManager.Instance.GetTileAt(transform.position);
         if (tile?.Type is TileType.Grass) movementSpeed *= .9f;
-        if (tile?.Type is TileType.TallGrass) movementSpeed *= .8f;
+        if (tile?.Type is TileType.TallGrass)
+        {
+            if (!_wasInTallGrass)
+            {
+                StopAllCoroutines();
+                StartCoroutine(WindVolumeRoutine(.5f));
+            }
+            _wasInTallGrass = true;
+            movementSpeed *= .8f;
+        }
+        else if (_wasInTallGrass)
+        {
+            _wasInTallGrass = false;
+            StopAllCoroutines();
+            StartCoroutine(WindVolumeRoutine(1));
+        }
         if (tile?.Type is TileType.Swamp) movementSpeed *= .8f;
 
         if (tile?.Type is TileType.Mine)
@@ -83,5 +100,15 @@ public class PlayerController : Singleton<PlayerController>
         }
 
         creature.Die();
+    }
+
+    private IEnumerator WindVolumeRoutine(float target)
+    {
+        var initial = AudioManager.Instance.GetChannelVolume(ChannelEnum.Ambient);
+        for (float t = 0; t < .3f; t += Time.deltaTime)
+        {
+            AudioManager.Instance.SetChannelVolume(ChannelEnum.Ambient, Mathf.Lerp(initial, target, t / .3f));
+            yield return null;
+        }
     }
 }
