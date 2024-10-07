@@ -174,9 +174,9 @@ public class GameManager : Singleton<GameManager>
         if (IsInfiniteMode) return;
         if (_isEndingLevel) return;
         _isEndingLevel = true;
-        _currentLevel = 0;
         AudioManager.Instance.Play(SoundEnum.Death, 0, false);
         StartCoroutine(DeathRoutine("YOU LOST YOUR LIFE TO HUNGER"));
+        _currentLevel = 0;
     }
 
     public void HandleFoundFood()
